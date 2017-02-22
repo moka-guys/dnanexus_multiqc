@@ -9,39 +9,10 @@
   "dxapi": "1.0.0",
   "inputSpec": [
     {
-      "name": "hsmetrics",
-      "label": "hsmetrics",
-      "help": "All hsmetrics files from this run ",
-      "class": "array:file",
-      "patterns": ["*.hsmetrics.tsv"]
-    },
-  {
-      "name": "base_distribution_by_cycle_metrics",
-      "label": "base_distribution_by_cycle_metrics",
-      "help": "All base_distribution_by_cycle_metrics files from this run",
-      "class": "array:file",
-      "patterns": ["*.base_distribution_by_cycle_metrics"]
-    },
-    {
-      "name": "insert_size_metrics",
-      "label": "insert size metrics",
-      "help": "All insert size metrics files from this run ",
-      "class": "array:file",
-      "patterns": ["*.insert_size_metrics"]
-    },
-    {
-      "name": "stats_fastqc",
-      "label": "stats-fastqc",
-      "help": "All stats-fastqc files from this run ",
-      "class": "array:file",
-      "patterns": ["*.stats-fastqc.txt"]
-    },
-    {
-      "name": "output_metrics",
-      "label": "output metrics",
-      "help": "All output.metrics files from this run ",
-      "class": "array:file",
-      "patterns": ["*.output.metrics"]
+      "name": "project_for_multiqc",
+      "label": "project to get the MultiQC treatment",
+      "help": "The project to get the MultiQC treatment",
+      "class": "string"
     }
   ],
   "outputSpec": [

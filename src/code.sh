@@ -5,41 +5,45 @@
 # and to output each line as it is executed -- useful for debugging
 set -e -x -o pipefail
 
-dx-download-all-inputs
+#read the api key as a variable
+API_KEY=$(cat '/home/dnanexus/auth_key')
 
-# make a directory to move all inputs into
+#cd to the folder which multiqc will run in
+cd to_test
 
-# Loop through the inputs folder, move all files into the same folder (each input has a folder /in/inputname and within this folder each input is within it's own folder eg /in/inputname/1, /in/inputname/2 etc)
-inputs=/home/dnanexus/in/
-ls $inputs
-#for each input (eg hsmetrics, base_distribution_by_cycle_metrics, insert_size_metrics, stats_fastqc and output.metrics)
-for input in `ls $inputs`; do
-	# go through each numbered folder
-	for sample_input in `ls $inputs/$input`; do
-		#and move the file into ~/allinputs
-		mv $inputs$input/$sample_input/* ~/to_test/
-	done
+# download the desired inputs. Use the input $project_for_multiqc to build the path to look in.
+dx download $project_for_multiqc:QC/*base_distribution_by_cycle_metrics --auth $API_KEY
+dx download $project_for_multiqc:QC/*hsmetrics* --auth $API_KEY
+dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
+dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
+dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
+
+# capture the variable $NGS_run to rename the multiqc output
+for file in *base*; do 
+	NGS_run=$(echo $file | cut -d'_' -f 1); 
 done
 
+# cd back to home
+cd ..
 
+# install Anaconda
 bash ~/Anaconda2-4.2.0-Linux-x86_64.sh -b -p $HOME/Anaconda
+
+#export to path
 export PATH="$HOME/Anaconda/bin:$PATH"
 
+# build multiqc
 cd MultiQC
 python setup.py install
 cd ..
 
+#make output folder
 mkdir -p /home/dnanexus/out/multiqc/multiqc
-# #
-# # Run multiQC
-# #
+
+# Run multiQC
 # # command is : multiqc <dir containing files> -m module1 -m module2 -n <path/to/output>
-multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/multiqc/$runfolder-multiqc.html
+multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/multiqc/$NGS_run-multiqc.html
 
-#
+
 # Upload results
-#
-#mark-section "uploading results"
-
 dx-upload-all-outputs
-#mark-success
