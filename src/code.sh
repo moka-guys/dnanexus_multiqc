@@ -39,11 +39,11 @@ python setup.py install
 cd ..
 
 #make output folder
-mkdir -p /home/dnanexus/out/multiqc/multiqc
+mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # # command is : multiqc <dir containing files> -m module1 -m module2 -n <path/to/output>
-multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/multiqc/$NGS_date-multiqc.html
+multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html
 
 
 # Upload results
