@@ -5,6 +5,12 @@
 # and to output each line as it is executed -- useful for debugging
 set -e -x -o pipefail
 
+# capture the variable $NGS_date from the runname variable to rename the multiqc output
+NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2); 
+blank=""
+runfolder=${project_for_multiqc/002_/$blank}
+
+
 #read the api key as a variable
 API_KEY=$(cat '/home/dnanexus/auth_key')
 
@@ -17,11 +23,6 @@ dx download $project_for_multiqc:QC/*hsmetrics* --auth $API_KEY
 dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
-
-# capture the variable $NGS_run to rename the multiqc output
-for file in *base*; do 
-	NGS_run=$(echo $file | cut -d'_' -f 1); 
-done
 
 # cd back to home
 cd ..
@@ -42,7 +43,7 @@ mkdir -p /home/dnanexus/out/multiqc/multiqc
 
 # Run multiQC
 # # command is : multiqc <dir containing files> -m module1 -m module2 -n <path/to/output>
-multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/multiqc/$NGS_run-multiqc.html
+multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/multiqc/$NGS_date-multiqc.html
 
 
 # Upload results
