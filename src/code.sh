@@ -33,10 +33,24 @@ bash ~/Anaconda2-4.2.0-Linux-x86_64.sh -b -p $HOME/Anaconda
 #export to path
 export PATH="$HOME/Anaconda/bin:$PATH"
 
-# build multiqc
-cd MultiQC
-python setup.py install
-cd ..
+WES=FALSE
+#determine if need to use multiqc @ 20X or 30X 
+#WES=FALSE
+for f in ~/to_test/* ; do 
+	if [[ $f == *Pan493* ]]; then 
+		WES=TRUE
+ 	fi
+done
+echo $WES
+if [[ $WES == TRUE ]]; then
+	cd MultiQC_20X
+	python setup.py install
+	cd ..
+else
+	cd MultiQC_30X
+	python setup.py install
+	cd ..
+fi
 
 #make output folder
 mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
