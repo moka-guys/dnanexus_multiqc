@@ -3,15 +3,15 @@
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC
 
-This app uses MultiQC version 0.8 (20X coverage code is from from https://github.com/woook/MultiQC and 30X code is from https://github.com/ewels/MultiQC )
+This app uses the latest release of MultiQC  (from https://github.com/ewels/MultiQC )
 
 ## What are typical use cases for this app?
-This app should be performed after each run. It can be run automatically using the --depends-on flag or manually.
+This app should be performed after each run. It can be run automagically using the --depends-on flag or manually.
 
 ## What data are required for this app to run?
 A project number is passed to the app as a parameter.
 This project must have a folder 'QC' within the root of the project.
-This folder must contain the following files:
+This folder must contain one of each of the following files:
 * stats-fastqc.txt
 * insert_size_metrics
 * hsmetrics.tsv
@@ -27,7 +27,7 @@ The outputs are placed in /QC/multiqc
 ## How does this app work?
 * The app parses the file names to determine if the samples are WES or custom panels.
 
- * If WES coverage is reported at 20X
+ * If WES coverage is reported at 20X (Pan493)
  * If not WES coverage is reported at 30X
 
 ## What are the limitations of this app
