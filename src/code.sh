@@ -42,7 +42,7 @@ for f in ~/to_test/* ; do
 done
 echo $WES
 
-git clone https://github.com/ewels/MultiQC.git
+git clone https://github.com/moka-guys/MultiQC.git
 cd MultiQC
 python setup.py install
 cd ..
