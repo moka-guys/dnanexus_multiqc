@@ -12,7 +12,6 @@ log = logging.getLogger(__name__)
 
 
 class StatsReportMixin():
-    """ Mixin class, loaded by main samtools MuliqcModule class. """
 
     def parse_samtools_stats(self):
         """ Find Samtools stats logs and parse their data """
@@ -33,7 +32,7 @@ class StatsReportMixin():
                 # Work out some percentages
                 if 'raw_total_sequences' in parsed_data:
                     for k in list(parsed_data.keys()):
-                        if k.startswith('reads_') and k != 'raw_total_sequences' and parsed_data['raw_total_sequences'] > 0:
+                        if k.startswith('reads_') and k != 'raw_total_sequences':
                             parsed_data['{}_percent'.format(k)] = (parsed_data[k] / parsed_data['raw_total_sequences']) * 100
 
                 if f['s_name'] in self.samtools_stats:
@@ -128,7 +127,7 @@ class StatsReportMixin():
             plot_html = plots.beeswarm.plot(self.samtools_stats, keys,
                                             {'id': 'samtools-stats-dp'})
             self.sections.append({
-                'name': 'Alignment metrics',
+                'name': 'Samtools Stats',
                 'anchor': 'samtools-stats',
                 'content': "<p>This module parses the output from <code>samtools stats</code>. All numbers in millions.</p> {}".format(plot_html)
             })
@@ -149,7 +148,7 @@ def alignment_section(samples_data):
                      "skipping samtools plot for: {}".format(sample_id))
     bargraph = alignment_chart(bedgraph_data)
     section = {
-        'name': 'Percent Mapped',
+        'name': 'Alignment',
         'anchor': 'samtools-stats-alignment',
         'content': ("<p>Alignment metrics from <code>samtools stats</code>;"
                     " mapped vs. unmapped reads.</p> {}".format(bargraph))

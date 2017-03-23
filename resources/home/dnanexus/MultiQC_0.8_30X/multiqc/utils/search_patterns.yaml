@@ -36,9 +36,6 @@ fastqc:
         fn: '*_fastqc.zip'
 featurecounts:
     fn: '*.summary'
-gatk:
-    varianteval:
-        contents: '#:GATKReport'
 hicup:
     fn: 'HiCUP_summary_report*'
 kallisto:
@@ -46,22 +43,18 @@ kallisto:
 methylQA:
     fn: '*.report'
 picard:
-    alignment_metrics:
-        contents: 'picard.analysis.AlignmentSummaryMetrics'
-    basedistributionbycycle:
-        contents: 'picard.analysis.BaseDistributionByCycleMetrics'
-    gcbias:
-        contents: 'picard.analysis.GcBiasDetailMetrics'
-    hsmetrics:
-        contents: 'picard.analysis.directed.HsMetrics'
-    insertsize:
-        contents: 'picard.analysis.InsertSizeMetrics'
     markdups:
-        contents: 'picard.sam.DuplicationMetrics'
+        contents: picard.sam.DuplicationMetrics
+    insertsize:
+        contents: picard.analysis.InsertSizeMetrics
+    gcbias:
+        contents: picard.analysis.GcBiasDetailMetrics
+    hsmetrics:
+        contents: picard.analysis.directed.HsMetrics
     oxogmetrics:
-        contents: 'picard.analysis.CollectOxoGMetrics'
-    rnaseqmetrics:
-        contents: 'picard.analysis.CollectRnaSeqMetrics'
+        contents: picard.analysis.CollectOxoGMetrics
+    basedistributionbycycle:
+        contents: picard.analysis.BaseDistributionByCycleMetrics
 preseq:
     contents: 'EXPECTED_DISTINCT'
     # contents: 'TOTAL_READS	EXPECTED_DISTINCT'
@@ -102,9 +95,6 @@ rseqc:
         contents: 'Group               Total_bases         Tag_count           Tags/Kb'
     read_duplication_pos:
         fn: '*.pos.DupRate.xls'
-    infer_experiment:
-        fn: '*infer_experiment.txt'
-        contents: 'Fraction of reads explained by'
 salmon:
     meta:
         fn: 'meta_info.json'
@@ -117,10 +107,8 @@ samtools:
         contents: 'This file was produced by samtools stats'
     flagstat:
         contents: 'in total (QC-passed reads + QC-failed reads)'
-    idxstats:
-        fn: '*idxstat*'
 skewer:
-    contents: 'maximum error ratio allowed (-r):'
+    contents: 'COMMAND LINE:	skewer'
 snpeff:
     contents: 'SnpEff_version'
 star:

@@ -70,7 +70,6 @@ class MultiqcModule(BaseMultiqcModule):
         log.info("Found {} reports".format(len(self.skewer_data)))
 
     def add_readlen_dist_plot(self):
-        """ Generate plot HTML for read length distribution plot. """
         pconfig = {
             'id': 'skewer_read_length_histogram',
             'title': 'Read Length Distribution after trimming with Skewer',
@@ -92,8 +91,8 @@ class MultiqcModule(BaseMultiqcModule):
         """ Go through log file looking for skewer output """
         fh = f['f']
         regexes = {
-            'fq1': "Input file:\s+(.+)",
-            'fq2': "Paired file:\s+(.+)",
+            'fq1': "Input file:\s+(\S+).(fastq$|fastq.gz$)",
+            'fq2': "Paired file:\s+(\S+).(fastq$|fastq.gz$)",
             'r_processed': "(\d+) read|reads pairs? processed",
             'r_short_filtered': "(\d+) \(\s*\d+.\d+%\) short read",
             'r_empty_filtered': "(\d+) \(\s*\d+.\d+%\) empty read",

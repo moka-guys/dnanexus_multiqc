@@ -61,29 +61,6 @@ To avoid this, run MultiQC with the `-d`/`--dirs` parameter. This will prefix ev
 sample name with the directory path that the log file was found within. As
 such, sample names will no longer be unique, and data will not be overwritten.
 
-By default, `--dirs` will prepend the entire path to each sample name. You can choose
-which directories are added with the `-dd`/`--dirs-depth` parameter. Set to a positive
-integer to use that many directories at the end of the path. A negative integer takes
-directories from the start of the path.
-
-For example:
-```
-$ multiqc -d .
-# analysis_1 | results | type | sample_1 | file.log
-# analysis_2 | results | type | sample_2 | file.log
-# analysis_3 | results | type | sample_3 | file.log
-
-$ multiqc -d -dd 1 .
-# sample_1 | file.log
-# sample_2 | file.log
-# sample_3 | file.log
-
-$ multiqc -d -dd -1 .
-# analysis_1 | file.log
-# analysis_2 | file.log
-# analysis_3 | file.log
-```
-
 ## Using different templates
 MultiQC is built around a templating system. You can produce reports with
 different styling by using the `-t`/`--template` option. The available templates
@@ -91,32 +68,6 @@ are listed with `multiqc --help`.
 
 If you're interested in creating your own custom template, see the
 [writing new templates](templates.md) section.
-
-## PDF Reports
-Whilst HTML is definitely the format of choice for MultiQC reports due to
-the interactive features that it can offer, PDF files are an integral part
-of some people's workflows. To try to accommodate this, MultiQC has a
-`--pdf` command line flag which will try to create a PDF report for you.
-
-To do this, MultiQC uses the `simple` template. This uses flat plots,
-has no navigation or toolbar and strips out all JavaScript. The resulting
-HTML report is pretty basic, but this simplicity is helpful when generating
-PDFs.
-
-Once the report is generated MultiQC attempts to call [Pandoc](http://pandoc.org/),
-a command line tool able to convert documents between different file formats.
-**You must have Pandoc already installed for this to work**. If you don't have
-Pandoc installed, you will get an error message that looks like this:
-```
-Error creating PDF - pandoc not found. Is it installed? http://pandoc.org/
-```
-
-Please note that Pandoc is a complex tool and uses LaTeX / XeLaTeX for PDF
-generation. Please make sure that you have the latest version of Pandoc and
-that it can successfully convert basic HTML files to PDF before reporting
-and errors. Also note that not all plots have flat image equivalents, so
-some will be missing (at time of writing: FastQC sequence content plot,
-beeswarm dot plots, heatmaps).
 
 ## Printing to stdout
 If you would like to generate MultiQC reports on the fly, you can print the
@@ -139,24 +90,6 @@ variable in your configuration file. Note that the data directory
 is never produced when printing the MultiQC report to `stdout`.
 
 To zip the data directory, use the `-z`/`--zip-data-dir` flag.
-
-## Exporting Plots
-In addition to the HTML report, it's also possible to get MultiQC to save
-plots as stand alone files. You can do this with the `-p`/`--export` command
-line flag. By default, plots will be saved in a directory called `multiqc_plots`
-as `.png`, `.svg` and `.pdf` files.
-
-You can instruct MultiQC to always do this by setting the `export_plots` config
-option to `true`, though note that this will add a few seconds on to execution time.
-The `plots_dir_name` changes the default directory name for plots and the
-`export_plot_formats` specifies what file formats should be created (must be
-supported by MatPlotLib).
-
-Note that not all plot types are yet supported, so you may find some plots are
-missing.
-
-> Note: You can always save static image versions of plots from within
-> MultiQC reports, using the [Export toolbox](#export) in the side bar.
 
 ## Choosing which modules to run
 Sometimes, it's desirable to choose which MultiQC modules run. This could be

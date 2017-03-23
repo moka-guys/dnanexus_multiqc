@@ -8,44 +8,43 @@ Using MultiQC:
   Common Problems: troubleshooting.md
 MultiQC Modules:
   Pre-alignment:
-    Cutadapt: modules/cutadapt.md
     FastQC: modules/fastqc.md
     FastQ Screen: modules/fastq_screen.md
     Skewer: modules/skewer.md
+    Cutadapt: modules/cutadapt.md
     Trimmomatic: modules/trimmomatic.md
   Aligners:
-    Bismark: modules/bismark.md
     Bowtie 1: modules/bowtie1.md
     Bowtie 2: modules/bowtie2.md
-    HiCUP: modules/hicup.md
-    Kallisto: modules/kallisto.md
+    TopHat: modules/tophat.md
     STAR: modules/star.md
     Salmon: modules/salmon.md
-    TopHat: modules/tophat.md
+    Kallisto: modules/kallisto.md
+    HiCUP: modules/hicup.md
+    Bismark: modules/bismark.md
   Post-alignment:
     Bamtools: modules/bamtools.md
-    Bcftools: modules/bcftools.md
-    featureCounts: modules/featureCounts.md
-    GATK: modules/gatk.md
-    Methyl QA: modules/methylQA.md
-    Picard: modules/picard.md
-    Preseq: modules/preseq.md
-    Qualimap: modules/qualimap.md
-    Quast: modules/quast.md
-    RSeQC: modules/rseqc.md
-    Samblaster: modules/samblaster.md
     Samtools: modules/samtools.md
+    Samblaster: modules/samblaster.md
+    Preseq: modules/preseq.md
+    Picard: modules/picard.md
+    RSeQC: modules/rseqc.md
+    Methyl QA: modules/methylQA.md
+    featureCounts: modules/featureCounts.md
+    Bcftools: modules/bcftools.md
+    Qualimap: modules/qualimap.md
     SnpEff: modules/snpeff.md
+    Quast: modules/quast.md
 Coding with MultiQC:
   Writing new templates: templates.md
   Writing new modules: modules.md
-  Plotting Functions: plots.md
   MultiQC Plugins: plugins.md
+  JavaScript Functions: javascript.md
 ---
 
 # Welcome!
 
-## MultiQC v0.8 Documentation
+## MultiQC v0.8dev Documentation
 
 MultiQC is a tool to aggregate bioinformatics results across many samples
 into a single report. It's written in Python and contains modules for a number

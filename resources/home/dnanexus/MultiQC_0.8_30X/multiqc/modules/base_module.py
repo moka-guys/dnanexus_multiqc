@@ -112,38 +112,21 @@ class BaseMultiqcModule(object):
         """
         if root is None:
             root = ''
+        # Split then take first section to remove everything after these matches
+        for ext in config.fn_clean_exts:
+            if type(ext) is str:
+                ext = {'type':'truncate', 'pattern':ext}
+            if ext['type'] == 'truncate':
+                s_name = os.path.basename(s_name.split(ext['pattern'] ,1)[0])
+            elif ext['type'] == 'replace':
+                s_name = s_name.replace(ext['pattern'], '')
+            elif ext['type'] == 'regex':
+                re_pattern = re.compile(r'{}'.format(ext['pattern']))
+                s_name = re.sub(re_pattern, '', s_name)
+            else:
+                logger.error('Unrecognised config.fn_clean_exts type: {}'.format(ext['type']))
         if config.prepend_dirs:
-            sep = config.prepend_dirs_sep
-            root = root.lstrip('.{}'.format(os.sep))
-            dirs = root.split(os.sep)
-            if config.prepend_dirs_depth != 0:
-                d_idx = config.prepend_dirs_depth * -1
-                if config.prepend_dirs_depth > 0:
-                    dirs = dirs[d_idx:]
-                else:
-                    dirs = dirs[:d_idx]
-            
-            s_name = "{}{}{}".format(sep.join(dirs), sep, s_name)
-        if config.fn_clean_sample_names:
-            # Split then take first section to remove everything after these matches
-            for ext in config.fn_clean_exts:
-                if type(ext) is str:
-                    ext = {'type':'truncate', 'pattern':ext}
-                if ext['type'] == 'truncate':
-                    s_name = os.path.basename(s_name.split(ext['pattern'] ,1)[0])
-                elif ext['type'] == 'replace':
-                    s_name = s_name.replace(ext['pattern'], '')
-                elif ext['type'] == 'regex':
-                    re_pattern = re.compile(r'{}'.format(ext['pattern']))
-                    s_name = re.sub(re_pattern, '', s_name)
-                else:
-                    logger.error('Unrecognised config.fn_clean_exts type: {}'.format(ext['type']))
-            # Trim off characters at the end of names
-            for chrs in config.fn_clean_trim:
-                if s_name.endswith(chrs):
-                    s_name = s_name[:-len(chrs)]
-                if s_name.startswith(chrs):
-                    s_name = s_name[len(chrs):]
+            s_name = "{} | {}".format(root.replace(os.sep, ' | '), s_name).lstrip('. | ')
         return s_name
     
     

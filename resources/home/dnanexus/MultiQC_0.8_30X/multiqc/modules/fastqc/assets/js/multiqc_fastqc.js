@@ -73,12 +73,6 @@ function fastqc_seq_content_heatmap() {
     c_width = $('#fastqc_seq_heatmap').parent().width() - 5; // -5 for status bar
     c_height = $('#fastqc_seq_heatmap').parent().height() - 2; // -2 for bottom line padding
     s_height = c_height / num_samples;
-    // Minimum row height
-    if(s_height < 2){
-        s_height = 2;
-        c_height = num_samples * 2;
-        $('#fastqc_seq_heatmap').parent().parent().height(c_height+10);
-    }
     // Resize the canvas properties
     $('#fastqc_seq_heatmap').prop({
         'width': c_width,
@@ -120,7 +114,7 @@ function fastqc_seq_content_heatmap() {
             ctx.fillRect (0, ypos+1, 5, s_height-2);
             
             // Plot the squares for the heatmap
-            var s = p_data[s_name];
+            var s = p_data[s_name]
             var xpos = 6;
             var last_bp = 0;
             $.each(s, function(bp, v){
@@ -143,13 +137,11 @@ function fastqc_seq_content_heatmap() {
                 ctx.fillRect (xpos, ypos, this_width+1, s_height);
                 xpos += this_width;
             });
-            // Draw a line under this row if we don't have too many samples
-            if(num_samples <= 20){
-                ctx.beginPath();
-                ctx.moveTo(6, ypos);
-                ctx.lineTo(c_width, ypos);
-                ctx.stroke();
-            }
+            // Draw a line under this row
+            ctx.beginPath();
+            ctx.moveTo(6, ypos);
+            ctx.lineTo(c_width, ypos);
+            ctx.stroke();
             ypos += s_height;
         });
         // Final line under row
@@ -167,7 +159,7 @@ $(function () {
     $.each(fastqc_passfails, function(k, vals){
         var pid = '#fastqc_'+k;
         var total = 0;
-        var v = { 'pass': 0, 'warn': 0, 'fail': 0 };
+        var v = { 'pass': 0, 'warn': 0, 'fail': 0 }
         $.each(vals, function(s_name, status){
             total += 1;
             v[status] += 1;
@@ -192,14 +184,14 @@ $(function () {
         var warns = $(this).hasClass('progress-bar-warning') ? true : false;
         var fails = $(this).hasClass('progress-bar-danger') ? true : false;
         var pclass = '';
-        if(passes){ pclass = 'success'; }
-        if(warns){ pclass = 'warning'; }
-        if(fails){ pclass = 'danger'; }
+        if(passes) pclass = 'success';
+        if(warns) pclass = 'warning';
+        if(fails) pclass = 'danger';
         var samples = Array();
         $.each(vals, function(s_name, status){
-            if(status == 'pass' && passes){ samples.push(s_name); }
-            else if(status == 'warn' && warns){ samples.push(s_name); }
-            else if(status == 'fail' && fails){ samples.push(s_name); }
+            if(status == 'pass' && passes) samples.push(s_name);
+            else if(status == 'warn' && warns) samples.push(s_name);
+            else if(status == 'fail' && fails) samples.push(s_name);
         });
         $($(this)).popover({
             title: $(this).attr('title'),
@@ -256,7 +248,7 @@ $(function () {
             }
         }
         // Set to "show only" and disable regex
-        $('.mqc_hidesamples_showhide[value="show"]').prop('checked', true);
+        $('.mqc_hidesamples_showhide[value="show"]').prop("checked", true);
         $('#mqc_hidesamples .mqc_regex_mode .re_mode').removeClass('on').addClass('off').text('off');
         // Add sample names to the toolbox
         for (i = 0; i < samples.length; i++) {

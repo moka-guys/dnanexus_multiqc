@@ -909,18 +909,11 @@ function plot_beeswarm_graph(target, ds){
     }
     var range = maxx-minx;
     var sep = range/yspace;
-    // Get an array of indexes from a sorted data array
-    // Leaves the data order in tact so we don't lose s_name association
-    var indices = new Array(data.length);
-    for (var n = 0; n < data.length; n++) { indices[n] = n; }
-    indices.sort(function (a, b) {
-      return data[a] < data[b] ? -1 : data[a] > data[b] ? 1 : 0;
-    });
+    data = data.sort();
     var xydata = [];
     var last = undefined;
     var side = 1;
-    for (var s_idx = 0; s_idx < indices.length; s_idx++) {
-      row = indices[s_idx];
+    for (var row = 0; row < data.length; row++) {
       s_name = s_names[row];
       d = data[row];
       if (Math.floor(d/sep) !== last){
@@ -1021,7 +1014,6 @@ function plot_beeswarm_graph(target, ds){
         plotOptions: {
           series: {
             name: label_long,
-            turboThreshold: 0,
             marker: {
               radius: markerRadius,
               states: {

@@ -23,7 +23,7 @@ MultiQC was written by Phil Ewels (http://phil.ewels.co.uk) at SciLifeLab Sweden
 
 from setuptools import setup, find_packages
 
-version = '0.8'
+version = '0.8dev'
 dl_version = 'master' if 'dev' in version else 'v{}'.format(version)
 
 print("""-----------------------------------
@@ -81,7 +81,6 @@ setup(
             'star = multiqc.modules.star:MultiqcModule',
             'tophat = multiqc.modules.tophat:MultiqcModule',
             'trimmomatic = multiqc.modules.trimmomatic:MultiqcModule',
-            'gatk = multiqc.modules.gatk:MultiqcModule',
         ],
         'multiqc.templates.v1': [
             'default = multiqc.templates.default',
@@ -97,7 +96,6 @@ setup(
             # 'config_loaded = myplugin.hooks:config_loaded',
             # 'before_modules = myplugin.hooks:before_modules',
             # 'after_modules = myplugin.hooks:after_modules',
-            # 'before_report_generation = myplugin.hooks:before_report_generation',
             # 'execution_finish = myplugin.hooks:execution_finish',
         # ]
     },

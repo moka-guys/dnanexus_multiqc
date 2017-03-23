@@ -6,16 +6,13 @@ it collects the configuration settings from the following places in this order
 
 1. Hardcoded defaults in MultiQC code
 2. System-wide config in `<installation_dir>/multiqc_config.yaml`
-  * Manual installations only, not `pip` or `conda`
 3. User config in `~/.multiqc_config.yaml`
 4. Config file in the current working directory: `multiqc_config.yaml`
 5. Command line options
 
-You can find an example configuration file with the MultiQC source code, called
-[`multiqc_config.example.yaml`](https://github.com/ewels/MultiQC/blob/master/multiqc_config_example.yaml).
-If you installed MultiQC with `pip` or `conda` you won't have this file locally,
-but you can find it on GitHub:
-[github.com/ewels/MultiQC](https://github.com/ewels/MultiQC/blob/master/multiqc_config_example.yaml).
+You can find an example configuration file bundled with MultiQC, called
+`multiqc_config.example.yaml` - hopefully this should be self explanatory
+through the included comments. Common changes are discussed in more detail below.
 
 ## Sample name cleaning
 MultiQC typically generates sample names by taking the input or log file name,
@@ -33,25 +30,19 @@ mysample.fastq.gz  ->  mysample
 secondsample.fastq.gz_trimming_log.txt  ->  secondsample
 thirdsample.fastq_aligned.sam.gz  ->  thirdsample
 ```
-There is also a config list called `fn_clean_trim` which just removes
-strings if they are present at the start or end of the sample name.
 
 Usually you don't want to overwrite the defaults (though you can).
-Instead, add to the special variable names `extra_fn_clean_exts`
-and `extra_fn_clean_trim`:
+Instead, add to the special variable name `extra_fn_clean_exts`:
 
 ```yaml
 extra_fn_clean_exts:
     - '.myformat'
     - '_processedFile'
-extra_fn_clean_trim:
-    - '#'
-    - '.myext'
 ```
 
 ### Other search types
-File name cleaning can also take strings to remove (instead of removing with truncation).
-Also regex strings can be supplied to match patterns and remove strings.
+As of MultiQC v0.6, file name cleaning can also take strings to remove (instead of 
+removing with truncation). Also regex strings can be supplied to match patterns and remove strings.
 
 Consider the following:
 ```yaml
@@ -113,9 +104,6 @@ Running `multiqc -s .` will give the following sample names:
 sample_1.fastq.gz.aligned.log
 sample_1.fastq.gz.subsampled.fastq.gz.aligned.log
 ```
-
-You can turn off sample name cleaning permanently by setting
-`fn_clean_sample_names` to `false` in your config file.
 
 ## Module search patterns
 Many bioinformatics tools have standard output formats, filenames and other

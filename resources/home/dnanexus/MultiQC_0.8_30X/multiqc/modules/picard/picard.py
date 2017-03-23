@@ -15,8 +15,6 @@ from . import BaseDistributionByCycleMetrics
 from . import GcBiasMetrics
 from . import HsMetrics
 from . import OxoGMetrics
-from . import RnaSeqMetrics
-from . import AlignmentSummaryMetrics
 
 # Initialise the logger
 log = logging.getLogger(__name__)
@@ -30,8 +28,8 @@ class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
 
         # Initialise the parent object
-        super(MultiqcModule, self).__init__(name='Picard', anchor='picard',
-        href='http://broadinstitute.github.io/picard/',
+        super(MultiqcModule, self).__init__(name='Picard', anchor='picard', 
+        href='http://broadinstitute.github.io/picard/', 
         info="is a set of Java command line tools for manipulating high-"\
         "throughput sequencing data.")
         
@@ -65,14 +63,6 @@ class MultiqcModule(BaseMultiqcModule):
         n['OxoGMetrics'] = OxoGMetrics.parse_reports(self)
         if n['OxoGMetrics'] > 0:
             log.info("Found {} OxoGMetrics reports".format(n['OxoGMetrics']))
-            
-        n['RnaSeqMetrics'] = RnaSeqMetrics.parse_reports(self)
-        if n['RnaSeqMetrics'] > 0:
-            log.info("Found {} RnaSeqMetrics reports".format(n['RnaSeqMetrics']))
-        
-        n['AlignmentMetrics'] = AlignmentSummaryMetrics.parse_reports(self)
-        if n['AlignmentMetrics'] > 0:
-            log.info("Found {} AlignmentSummaryMetrics reports".format(n['AlignmentMetrics']))
         
         # Exit if we didn't find anything
         if sum(n.values()) == 0:

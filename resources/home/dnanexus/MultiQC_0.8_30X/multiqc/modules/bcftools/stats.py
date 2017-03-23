@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class StatsReportMixin():
-    """ Mixin loaded by the bcftools MultiqcModule class """
 
     def parse_bcftools_stats(self):
         """
@@ -89,7 +88,7 @@ class StatsReportMixin():
                 'cpswitch_counts_label': 'Number of Substitutions'
             }
             self.sections.append({
-                'name': 'Variant Substitution Types',
+                'name': 'Substitution Types',
                 'anchor': 'bcftools-stats',
                 'content': plots.bargraph.plot(self.bcftools_stats, keys, pconfig)
             })

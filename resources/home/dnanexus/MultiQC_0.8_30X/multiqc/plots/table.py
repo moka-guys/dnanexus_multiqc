@@ -8,7 +8,7 @@ import logging
 import os
 import random
 
-from multiqc.utils import config, report, util_functions
+from multiqc.utils import config, util_functions
 from multiqc.plots import table_object, beeswarm
 logger = logging.getLogger(__name__)
 
@@ -33,10 +33,10 @@ def plot (data, headers=[], pconfig={}):
     # Make a beeswarm plot if we have lots of samples
     if len(s_names) >= config.max_table_rows and pconfig.get('no_beeswarm') is not True:
         logger.debug('Plotting beeswarm instead of table, {} samples'.format(len(s_names)))
-        warning = '<p class="text-muted"><span class="glyphicon glyphicon-exclamation-sign" ' \
-            'title="A beeswarm plot has been generated instead because of the large number of samples. '\
-            'See http://multiqc.info/docs/#tables--beeswarm-plots"'\
-            ' data-toggle="tooltip"></span> Showing {} samples.</p>'.format(len(s_names))
+        warning = """<p>This report is very large.
+            A beeswarm plot has been generated instead of a table to aid usability.
+            To disable this, set <code>max_table_rows</code> to a very high number
+            in your MultiQC config file.</p>"""
         return warning + beeswarm.make_plot( dt )
     else:
         return make_table ( dt )
@@ -75,16 +75,14 @@ def make_table (dt):
                 checked = ''
                 hidden_cols += 1
             
-            c_col = '' if header['scale'] == False else 'chroma-col'
-            
             data_attr = 'data-chroma-scale="{}" data-chroma-max="{}" data-chroma-min="{}" {}' \
                 .format(header['scale'], header['dmax'], header['dmin'], shared_key)
             
             cell_contents = '<span data-toggle="tooltip" title="{}: {}">{}</span>' \
                 .format(header['namespace'], header['description'], header['title'])
             
-            t_headers[rid] = '<th id="header_{rid}" class="{cc} {rid} {h}" {d}>{c}</th>' \
-                .format(rid=rid, d=data_attr, h=hide, c=cell_contents, cc=c_col)
+            t_headers[rid] = '<th id="header_{rid}" class="chroma-col {rid} {h}" {d}>{c}</th>' \
+                .format(rid=rid, d=data_attr, h=hide, c=cell_contents)
             
             empty_cells[rid] = '<td class="data-coloured {rid} {h}"></td>'.format(rid=rid, h=hide)
             
@@ -117,8 +115,7 @@ def make_table (dt):
             for (s_name, samp) in dt.data[idx].items():
                 if k in samp:
                     val = samp[k]
-                    kname = '{}_{}'.format(header['namespace'], rid[5:]) # trucate 'kxhe_' random chars from rid
-                    dt.raw_vals[s_name][kname] = val
+                    dt.raw_vals[s_name][rid] = val
                     
                     if 'modify' in header and callable(header['modify']):
                         val = header['modify'](val)
@@ -143,15 +140,12 @@ def make_table (dt):
                         val = samp[k]
                     
                     # Build HTML
-                    if not header['scale']:
-                        t_rows[s_name][rid] = '<td class="{rid} {h}">{v}</td>'.format(rid=rid, h=hide, v=val)
-                    else:
-                        bar_html = '<span class="bar" style="width:{}%;"></span>'.format(percentage)
-                        val_html = '<span class="val">{}</span>'.format(val)
-                        wrapper_html = '<div class="wrapper">{}{}</div>'.format(bar_html, val_html)
-                        
-                        t_rows[s_name][rid] = \
-                            '<td class="data-coloured {rid} {h}">{c}</td>'.format(rid=rid, h=hide, c=wrapper_html)
+                    bar_html = '<span class="bar" style="width:{}%;"></span>'.format(percentage)
+                    val_html = '<span class="val">{}</span>'.format(val)
+                    wrapper_html = '<div class="wrapper">{}{}</div>'.format(bar_html, val_html)
+                    
+                    t_rows[s_name][rid] = \
+                        '<td class="data-coloured {rid} {h}">{c}</td>'.format(rid=rid, h=hide, c=wrapper_html)
             
             # Remove header if we don't have any filled cells for it
             if sum([len(rows) for rows in t_rows.values()]) == 0:
@@ -164,9 +158,7 @@ def make_table (dt):
     #
     
     # Buttons above the table
-    html = ''
-    if not config.simple_output:
-        html += """
+    html = """
         <button type="button" class="mqc_table_copy_btn btn btn-default btn-sm" data-clipboard-target="#{tid}">
             <span class="glyphicon glyphicon-copy"></span> Copy table
         </button>
@@ -201,8 +193,7 @@ def make_table (dt):
     html += '</tbody></table></div></div>'
     
     # Build the bootstrap modal to customise columns and order
-    if not config.simple_output:
-        html += """
+    html += """
     <!-- MultiQC Table Columns Modal -->
     <div class="modal fade" id="{tid}_configModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -241,7 +232,6 @@ def make_table (dt):
     if dt.pconfig.get('save_file') is True:
         fn = dt.pconfig.get('raw_data_fn', 'multiqc_{}'.format(table_id) )
         util_functions.write_data_file(dt.raw_vals, fn )
-        report.saved_raw_data[fn] = dt.raw_vals
     
     return html
     
