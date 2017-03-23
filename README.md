@@ -3,6 +3,8 @@
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC
 
+This app uses MultiQC version 0.8 (20X coverage code is from from https://github.com/woook/MultiQC and 30X code is from https://github.com/ewels/MultiQC )
+
 ## What are typical use cases for this app?
 This app should be performed after each run. It can be run automatically using the --depends-on flag or manually.
 
@@ -30,6 +32,7 @@ The outputs are placed in /QC/multiqc
 
 ## What are the limitations of this app
 If the run is a mix of WES and non-WES coverage will be reported at 20X.
+The project which MultiQC is run on must be shared with the user mokaguys
 
 ## This app was made by Viapath Genome Informatics 
 
