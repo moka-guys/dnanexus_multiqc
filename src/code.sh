@@ -7,8 +7,8 @@ set -e -x -o pipefail
 
 # capture the variable $NGS_date from the runname variable to rename the multiqc output
 NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2); 
-blank=""
-runfolder=${project_for_multiqc/002_/$blank}
+#blank=""
+#runfolder=${project_for_multiqc/002_/$blank}
 
 
 #read the api key as a variable
