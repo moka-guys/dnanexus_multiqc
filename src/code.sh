@@ -44,17 +44,16 @@ for f in ~/to_test/* ; do
  	fi
 done
 echo $WES
+
+git clone https://github.com/ewels/MultiQC.git
+cd MultiQC
+python setup.py install
+cd ..
+
 if [[ $WES == TRUE ]]; then
-	#git clone https://github.com/ewels/MultiQC.git
-	cd MultiQC_0.8_20X
-	python setup.py install
-	cd ..
-	#mv multiqc_config.yaml to_test/multiqc_config.yaml
+	mv multiqc_config_20X.yaml to_test/multiqc_config.yaml
 else
-	cd MultiQC_0.8_30X
-	python setup.py install
-	cd ..
-	#mv multiqc_config.yaml to_test/multiqc_config.yaml
+	mv multiqc_config_30X.yaml to_test/multiqc_config.yaml
 fi
 
 #make output folder
