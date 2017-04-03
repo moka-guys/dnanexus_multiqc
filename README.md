@@ -3,7 +3,7 @@
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC
 
-This app uses the latest release of MultiQC  (from https://github.com/ewels/MultiQC )
+This app uses a release of MultiQC  from https://github.com/moka-guys/MultiQC
 
 ## What are typical use cases for this app?
 This app should be performed after each run. It can be run automagically using the --depends-on flag or manually.
