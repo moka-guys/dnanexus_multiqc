@@ -7,9 +7,6 @@ set -e -x -o pipefail
 
 # capture the variable $NGS_date from the runname variable to rename the multiqc output
 NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2); 
-blank=""
-runfolder=${project_for_multiqc/002_/$blank}
-
 
 #read the api key as a variable
 API_KEY=$(cat '/home/dnanexus/auth_key')
@@ -28,10 +25,12 @@ dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
 cd ..
 
 # install Anaconda
-bash ~/Anaconda2-4.2.0-Linux-x86_64.sh -b -p $HOME/Anaconda
+bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
 #export to path
-export PATH="$HOME/Anaconda/bin:$PATH"
+export PATH="$HOME/Miniconda/bin:$PATH"
+
+conda install jinja2 click markupsafe simplejson freetype -y
 
 WES=FALSE
 #determine if need to use multiqc @ 20X or 30X 
@@ -42,14 +41,16 @@ for f in ~/to_test/* ; do
  	fi
 done
 echo $WES
+
+git clone https://github.com/moka-guys/MultiQC.git
+cd MultiQC
+python setup.py install
+cd ..
+
 if [[ $WES == TRUE ]]; then
-	cd MultiQC_20X
-	python setup.py install
-	cd ..
+	mv multiqc_config_20X.yaml to_test/multiqc_config.yaml
 else
-	cd MultiQC_30X
-	python setup.py install
-	cd ..
+	mv multiqc_config_30X.yaml to_test/multiqc_config.yaml
 fi
 
 #make output folder
@@ -57,7 +58,7 @@ mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # # command is : multiqc <dir containing files> -m module1 -m module2 -n <path/to/output>
-multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html
+multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
 
 
 # Upload results
