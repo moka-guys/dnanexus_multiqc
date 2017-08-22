@@ -30,7 +30,7 @@ bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 #export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
 
-conda install jinja2 click markupsafe simplejson freetype -y
+conda install jinja2 click markupsafe simplejson freetype networkx=1.11 -y
 
 WES=FALSE
 #determine if need to use multiqc @ 20X or 30X 

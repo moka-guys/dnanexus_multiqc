@@ -1,13 +1,13 @@
 {
   "name": "multiqc",
   "title": "MultiQC",
-  "summary": "v1.1 - Generates a run-wide QC report on various QC data files",
+  "summary": "v1.2 - Generates a run-wide QC report on various QC data files",
   "tags": [
     "Read QC",
     "Statistics"
   ],
-        "properties": {
-    "github release": "v1.1"
+  "properties": {
+    "github release": "v1.2"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -32,9 +32,16 @@
         "name": "openjdk-7-jre-headless"
       },
       {
-        "name":"git"
+        "name": "git"
       }
     ],
+    "systemRequirementsByRegion": {
+      "aws:us-east-1": {
+        "main": {
+          "instanceType": "mem1_ssd1_x2"
+        }
+      }
+    },
     "systemRequirements": {
       "main": {
         "instanceType": "mem1_ssd1_x2"
@@ -43,9 +50,9 @@
     "file": "src/code.sh",
     "interpreter": "bash"
   },
-   "access": {
-    "network": [  
-    "*"
+  "access": {
+    "network": [
+      "*"
     ]
   }
 }
