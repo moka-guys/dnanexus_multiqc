@@ -1,4 +1,4 @@
-# dnanexus_multiqc v 1.1
+# dnanexus_multiqc v 1.2
 
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC

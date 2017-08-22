@@ -39,7 +39,7 @@ make_data_dir: True
 extra_fn_clean_exts:
 #    - type: 'replace'
 #      pattern: 'NGS95a_'
-    - type: 'replace'
+    - type: remove
       pattern: '_001'      
     # - .gz
     # - .fastq
@@ -88,36 +88,23 @@ max_table_rows: 500              # Swap tables for a beeswarm plot above this
 # Overwrite module filename search patterns. See multiqc/utils/search_patterns.yaml
 # for the defaults. Remove a default by setting it to null.
 sp:
-    fastqc:
-        data:
-            fn: '*.stats-fastqc.txt'
-        zip:
-            fn: '*_fastqc.zip'
-        theoretical_gc:
-            fn: '*fastqc_theoretical_gc*'
-    picard:
-        alignment_metrics:
-            contents: 'picard.analysis.AlignmentSummaryMetrics'
-        basedistributionbycycle:
-            contents: 'picard.analysis.BaseDistributionByCycleMetrics'
-        gcbias:
-            contents: 'picard.analysis.GcBiasDetailMetrics'
-        hsmetrics:
-            contents: 'picard.analysis.directed.HsMetrics'
-        insertsize:
-            contents: 'picard.analysis.InsertSizeMetrics'
-        markdups:
-            contents: 'picard.sam.DuplicationMetrics'
-        oxogmetrics:
-            contents: 'picard.analysis.CollectOxoGMetrics'
-        rnaseqmetrics:
-            contents:
-              - 'picard.analysis.CollectRnaSeqMetrics'
-              - 'picard.analysis.Collectrnaseqmetrics'
-        rrbs_metrics:
-            contents: 'picard.analysis.RrbsSummaryMetrics'
-        wgs_metrics:
-            contents: 'picard.analysis.CollectWgsMetrics$WgsMetrics'
+    fastqc/data:
+        fn: '*.stats-fastqc.txt'
+    picard/alignment_metrics:
+        contents: 'picard.analysis.AlignmentSummaryMetrics'
+        shared: true
+    picard/basedistributionbycycle:
+        contents: 'picard.analysis.BaseDistributionByCycleMetrics'
+        shared: true
+    picard/hsmetrics:
+        contents: 'picard.analysis.directed.HsMetrics'
+        shared: true
+    picard/insertsize:
+        contents: 'picard.analysis.InsertSizeMetrics'
+        shared: true
+    picard/markdups:
+        contents: 'picard.sam.DuplicationMetrics'
+        shared: true
 
 
 # # Specify a custom logo to add to reports (uncomment to use)
