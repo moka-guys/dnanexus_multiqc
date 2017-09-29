@@ -21,6 +21,15 @@ dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
 
+# Find unique File ID for stats.json file in project
+stats_json = $(dx find data --path $project_for_multiqc fastq_MultiQC: --name "Stats.json" | cut -f8 -d ' ' | tr -d '()')
+# If stats.json file is present download
+if[[ $stats_json =~ ^"file" ]]; then #
+dx download $stats_json --auth $API_KEY
+else
+echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fast2 stats not included in summary"
+fi
+
 # cd back to home
 cd ..
 
@@ -58,8 +67,9 @@ mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # # command is : multiqc <dir containing files> -m module1 -m module2 -n <path/to/output>
-multiqc /home/dnanexus/to_test/ -m fastqc -m picard -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
+multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
 
 
 # Upload results
 dx-upload-all-outputs
+
