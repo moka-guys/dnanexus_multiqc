@@ -1,5 +1,7 @@
 # dnanexus_multiqc 
-*moka-guys github release : v.1.4*
+
+*moka-guys github release : v1.3*
+
 *ewels/MultiQC v1.3*
 
 ## What does this app do?
