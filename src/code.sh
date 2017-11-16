@@ -21,14 +21,17 @@ dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
 
-# Find unique File ID for stats.json file in project
+# Find unique File ID for Stats.json file in project.
+# Files in the QC folder are placed there by third-party QC programs before being downloaded to the worker
+# Stats.json is the exception. It is uploaded with the runfolder at Data/Intesities/BaseCalls/Stats/.
+# This search makes sure it is found in the project/runfolder regardless of project name.
 stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" | cut -f8 -d ' ' | tr -d '()')
 # If stats.json file is present download
 if [[ $stats_json =~ ^"file" ]]
 then 
 dx download $stats_json --auth $API_KEY
 else
-echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fast2 stats not included in summary"
+echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fastq2 stats not included in summary"
 fi
 
 # cd back to home
@@ -52,6 +55,10 @@ for f in ~/to_test/* ; do
 done
 echo $WES
 
+# Test MultiQC from development branch of moka-guys fork
+# git clone -b dev_v1.3 https://github.com/moka-guys/MultiQC.git
+
+# Clone and install MultiQC from master branch of moka-guys fork
 git clone https://github.com/moka-guys/MultiQC.git
 cd MultiQC
 python setup.py install
