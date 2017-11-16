@@ -1,9 +1,5 @@
-# dnanexus_multiqc 
-
-*moka-guys github release : v1.3*
-
-*ewels/MultiQC v1.3*
-
+# dnanexus_multiqc v 1.3
+ewels/MultiQC [v1.3](https://github.com/ewels/MultiQC/releases/tag/v1.3)
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC and bcl2fastq2
 
@@ -21,8 +17,7 @@ This folder must contain one of each of the following files:
 * hsmetrics.tsv
 * base_distribution_by_cycle_metrics
 * output.metrics
-Additionally the project folder must have a Stats.json file in Data/Intensities/BaseCalls/Stats in order to
-include stats from bcl2fastq2 in the summary.
+Additionally, if demultiplexing was performed by bcl2fastq v2.20 (or later) the 'Stats.json' file located in Data/Intensities/BaseCalls/Stats will be used to display demultiplexing statistics in the output report.
 
 ## What does this app output?
 1. A HTML QC report which should be uploaded to stickie.be
