@@ -17,6 +17,7 @@ This folder must contain one of each of the following files:
 * hsmetrics.tsv
 * base_distribution_by_cycle_metrics
 * output.metrics
+
 Additionally, if demultiplexing was performed by bcl2fastq v2.20 (or later) the 'Stats.json' file located in Data/Intensities/BaseCalls/Stats will be used to display demultiplexing statistics in the output report.
 
 ## What does this app output?
