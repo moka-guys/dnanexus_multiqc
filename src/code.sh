@@ -25,10 +25,13 @@ dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
 # Stats.json is uploaded with the runfolder in Data/Intesities/BaseCalls/Stats/.
 # This search makes sure it is found in the project/runfolder regardless of project name:
 # 
-# For example, if "Stats.json" is present, the 'dx find' command would return: 
+# If "Stats.json" is present, the `dx find data` command below returns: 
 # closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
-# 'cut' and 'tr' select the file ID and remove brackets respectively
-# For example if "Stats.json" is present, then $stats_json="file-F74GXP80QBG98Xg2Gy4G7ggF", else $stats_json="".
+# The command `cut -f8 -d ''` extracts the file ID from the eight field of this string, using space as a delimiter.
+# The command `tr -d '()'` deletes bracket characters from the file ID.
+#
+# When the commands are piped in the order mentioned and a "Stats.json" file is present, then 
+# $stats_json="file-F74GXP80QBG98Xg2Gy4G7ggF", else $stats_json="".
 stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" | cut -f8 -d ' ' | tr -d '()')
 
 # Test if the string contained in $stats_json starts with "file", then download, else continue.
