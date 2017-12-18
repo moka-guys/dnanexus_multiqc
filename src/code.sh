@@ -5,6 +5,9 @@
 # and to output each line as it is executed -- useful for debugging
 set -e -x -o pipefail
 
+# capture the variable $NGS_date from the runname variable to rename the multiqc output
+NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2);
+
 #read the api key as a variable
 API_KEY=$(cat '/home/dnanexus/auth_key')
 
@@ -18,6 +21,7 @@ dx download $project_for_multiqc:QC/*hsmetrics* --auth $API_KEY
 dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
+dx download $project_for_multiqc:QC/ped\.* --auth $API_KEY
 
 # Stats.json is uploaded with the runfolder in Data/Intesities/BaseCalls/Stats/.
 # This search makes sure it is found in the project/runfolder regardless of project name:
@@ -78,7 +82,7 @@ mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # Command is : multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
-multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$project_for_multiqc-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
+multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
 
 # Upload results
 dx-upload-all-outputs

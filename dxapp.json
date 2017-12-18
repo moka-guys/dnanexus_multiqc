@@ -35,18 +35,6 @@
         "name": "git"
       }
     ],
-    "systemRequirementsByRegion": {
-      "aws:us-east-1": {
-        "main": {
-          "instanceType": "mem1_ssd1_x2"
-        }
-      }
-    },
-    "systemRequirements": {
-      "main": {
-        "instanceType": "mem1_ssd1_x2"
-      }
-    },
     "file": "src/code.sh",
     "interpreter": "bash"
   },
@@ -54,5 +42,14 @@
     "network": [
       "*"
     ]
+  },
+  "regionalOptions": {
+    "aws:us-east-1": {
+      "systemRequirements": {
+        "main": {
+          "instanceType": "mem1_ssd1_x2"
+        }
+      }
+    }
   }
 }
