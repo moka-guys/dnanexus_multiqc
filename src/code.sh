@@ -22,6 +22,7 @@ dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
 dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
 dx download $project_for_multiqc:QC/ped\.* --auth $API_KEY
+dx download $project_for_multiqc:QC/*selfSM --auth $API_KEY
 
 # Stats.json is uploaded with the runfolder in Data/Intesities/BaseCalls/Stats/.
 # This search makes sure it is found in the project/runfolder regardless of project name:
