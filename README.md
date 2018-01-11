@@ -1,10 +1,15 @@
 # dnanexus_multiqc v 1.3
-ewels/MultiQC [v1.3](https://github.com/ewels/MultiQC/releases/tag/v1.3)
+ewels/MultiQC [v1.4dev](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
-This app runs MultiQC to generate run wide QC using the outputs from Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics and FastQC and bcl2fastq2
+This app runs MultiQC to generate run wide QC using the outputs from MokaPipe and MokaWES pipelines including:
+* Picard CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics 
+* FastQC 
+* bcl2fastq2
+* Peddy
+* verifyBAMID
 
-This app uses a release of MultiQC from https://github.com/moka-guys/MultiQC
+This app uses a fork of MultiQC from https://github.com/moka-guys/MultiQC
 
 ## What are typical use cases for this app?
 This app should be performed after each run. It can be run automagically using the --depends-on flag or manually.
@@ -12,18 +17,11 @@ This app should be performed after each run. It can be run automagically using t
 ## What data are required for this app to run?
 A project number is passed to the app as a parameter.
 This project must have a folder 'QC' within the root of the project.
-This folder must contain one of each of the following files:
-* stats-fastqc.txt
-* insert_size_metrics
-* hsmetrics.tsv
-* base_distribution_by_cycle_metrics
-* output.metrics
-* ped.het_check.csv
-* ped.ped_check.csv
-* ped.peddy.ped
-* ped.sex_check.csv
+All files from this folder are downloaded and parsed by MultiQC
 
-Additionally, if demultiplexing was performed by bcl2fastq v2.20 (or later) the 'Stats.json' file located in Data/Intensities/BaseCalls/Stats will be used to display demultiplexing statistics in the output report.
+QC files are also downloaded from other locations:
+* if demultiplexing was performed by bcl2fastq v2.20 (or later) 'Stats.json' is downloaded from  Data/Intensities/BaseCalls/Stats 
+* if the MokaWES pipeline was run mapping_metrics.csv files are downloaded from the output folder.
 
 ## What does this app output?
 1. A HTML QC report which should be uploaded to stickie.be
@@ -32,16 +30,13 @@ Additionally, if demultiplexing was performed by bcl2fastq v2.20 (or later) the 
 The outputs are placed in /QC/multiqc
 
 ## How does this app work?
-* The app parses the file names to determine if the samples are WES or custom panels.
+* The app parses the file names to determine if any of the samples are WES samples (Pan493).
 
- * If WES coverage is reported at 20X (Pan493)
- * If not WES coverage is reported at 30X
+ * If yes, coverage is reported at 20X
+ * Else coverage is reported at 30X
 
 ## What are the limitations of this app
 If the run is a mix of WES and non-WES coverage will be reported at 20X.
 The project which MultiQC is run on must be shared with the user mokaguys
 
 ## This app was made by Viapath Genome Informatics 
-
-
-

@@ -11,18 +11,25 @@ NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2);
 #read the api key as a variable
 API_KEY=$(cat '/home/dnanexus/auth_key')
 
-#cd to the folder which multiqc will run in
+# make and cd to the folder which multiqc will run in
+mkdir to_test
 cd to_test
 
-# Files in the QC folder are placed there by third-party QC programs before being downloaded to the worker
-# download the desired inputs. Use the input $project_for_multiqc to build the path to look in.
-dx download $project_for_multiqc:QC/*base_distribution_by_cycle_metrics --auth $API_KEY
-dx download $project_for_multiqc:QC/*hsmetrics* --auth $API_KEY
-dx download $project_for_multiqc:QC/*insert_size_metrics --auth $API_KEY
-dx download $project_for_multiqc:QC/*output.metrics --auth $API_KEY
-dx download $project_for_multiqc:QC/*stats-fastqc.txt --auth $API_KEY
-dx download $project_for_multiqc:QC/ped\.* --auth $API_KEY
-dx download $project_for_multiqc:QC/*selfSM --auth $API_KEY
+# *MOST* QC files are stored at /QC/
+# to make this futureproof download entire contents of this folder within $project_for_multiqc.
+dx download $project_for_multiqc:QC/* --auth $API_KEY
+
+# check if there are any dragen output files
+# list all files which match the string in the output folder
+# pass this list to grep using -c which just outputs the count
+mapping_metrics_count=$(dx ls $project_for_multiqc:/output/*mapping_metrics.csv --auth K2v2COMKM7NdjeHyWdINUSrCrHaJfnxZ | grep -c mapping_metrics)
+
+# if there are files to download
+if $mapping_metrics_count > 0:
+	# download them
+	dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth K2v2COMKM7NdjeHyWdINUSrCrHaJfnxZ
+fi
+
 
 # Stats.json is uploaded with the runfolder in Data/Intesities/BaseCalls/Stats/.
 # This search makes sure it is found in the project/runfolder regardless of project name:
@@ -48,23 +55,17 @@ fi
 # cd back to home
 cd ..
 
+####  Download and install Python and MultiQC
+#download miniconda from 001
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:file-F9F0fgj0jy1y61bzJj45Yp0X  --auth $API_KEY
+
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
 #export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
-
+# use conda to download all packages required
 conda install jinja2 click markupsafe simplejson freetype networkx=1.11 -y
-
-WES=FALSE
-#determine if need to use multiqc @ 20X or 30X 
-#WES=FALSE
-for f in ~/to_test/* ; do 
-	if [[ $f == *Pan493* ]]; then 
-		WES=TRUE
- 	fi
-done
-echo $WES
 
 # Clone and install MultiQC from master branch of moka-guys fork
 git clone https://github.com/moka-guys/MultiQC.git
@@ -72,18 +73,31 @@ cd MultiQC
 python setup.py install
 cd ..
 
-if [[ $WES == TRUE ]]; then
-	mv multiqc_config_20X.yaml to_test/multiqc_config.yaml
-else
-	mv multiqc_config_30X.yaml to_test/multiqc_config.yaml
-fi
+#### Set MultiQC parameters
+#set flag to see if any WES samples are present
+WES=FALSE
+
+# set default config file to the 30X one
+multiqc_config="/home/dnanexus/multiqc_config_30X.yaml"
+
+# If any WES samples need to report coverage @ 20X - look for any WES samples
+for f in ~/to_test/* ; do 
+	# if Pan493 in the filename
+	if [[ $f == *Pan493* ]]; then 
+		# change the config file variable to point @ 20X config file
+		multiqc_config="/home/dnanexus/multiqc_config_20X.yaml"
+ 	fi
+done
 
 #make output folder
 mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # Command is : multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
-multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c /home/dnanexus/to_test/multiqc_config.yaml
+multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c $multiqc_config
+
+# copy the config file used to output folder
+mv $multiqc_config /home/dnanexus/out/multiqc/QC/multiqc/
 
 # Upload results
 dx-upload-all-outputs
