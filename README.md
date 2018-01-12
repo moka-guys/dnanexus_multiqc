@@ -9,7 +9,7 @@ This app runs MultiQC to generate run wide QC using the outputs from MokaPipe an
 * Peddy
 * verifyBAMID
 
-This app uses a fork of MultiQC from https://github.com/moka-guys/MultiQC
+This app uses a fork of MultiQC at [https://github.com/moka-guys/MultiQC]:https://github.com/moka-guys/MultiQC
 
 ## What are typical use cases for this app?
 This app should be performed after each run. It can be run automagically using the --depends-on flag or manually.

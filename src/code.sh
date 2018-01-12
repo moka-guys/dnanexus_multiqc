@@ -77,7 +77,6 @@ conda install jinja2 click markupsafe simplejson freetype networkx=2.0 -y
 git clone https://github.com/moka-guys/MultiQC.git
 
 cd MultiQC
-git checkout develop
 python setup.py install
 cd ..
 
