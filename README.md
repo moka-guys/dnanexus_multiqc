@@ -23,7 +23,7 @@ QC files are also downloaded from other locations:
 * If demultiplexing was performed by bcl2fastq v2.20 (or later) 'Stats.json' is downloaded from  /runfolder/Data/Intensities/BaseCalls/Stats 
 * If the MokaWES pipeline was run, mapping_metrics.csv files are downloaded from /output.
 
-Thye miniconda python setup script is downloaded from 001_ToolsReferenceData:/Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh
+The miniconda installation script is downloaded from 001_ToolsReferenceData:/Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh
 
 ## What does this app output?
 1. A HTML QC report (with the name of the runfolder) which should be uploaded to stickie.be
