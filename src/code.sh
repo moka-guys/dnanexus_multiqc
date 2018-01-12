@@ -19,10 +19,8 @@ cd to_test
 # to make this futureproof download entire contents of this folder within $project_for_multiqc.
 dx download $project_for_multiqc:QC/* --auth $API_KEY
 
-# check if there are any dragen output files
-
-# list all files in the output folder
-# pass this list to grep using -c which just outputs the count of files which match mapping_metrics
+# check if there are any dragen output files (named mapping_metrics.csv) using dx find
+# pipe this to wc -l to find number of files found. if no files are found wc -l ==0 
 mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv" --auth $API_KEY | wc -l)
 
 # if there are mapping metrics files to download
@@ -69,7 +67,7 @@ bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
 #export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
-#conda update -y
+
 # use conda to download all packages required
 conda install jinja2 click markupsafe simplejson freetype networkx=2.0 -y
 
