@@ -126,7 +126,22 @@ table_columns_visible:
     FastQC:
         percent_fails: False
         total_sequences: True
+    Peddy:
+        ancestry-prediction: False
+        family_id: False
+        sex_het_ratio: False
+        sex_error: True
+    verifyBAMID:
+        CHIPMIX: False
 
 picard_config:
     general_stats_target_coverage:
         - 20
+
+table_cond_formatting_rules:
+    mqc-generalstats-FREEMIX:
+        fail:
+            - gt: 1
+            - eq: 1
+        pass:
+            - lt: 1
