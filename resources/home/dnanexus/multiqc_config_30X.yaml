@@ -139,11 +139,6 @@ picard_config:
         - 30
 
 table_cond_formatting_rules:
-    mqc-generalstats-error_sex_check:
-        fail:
-            - s_eq: 'true'
-        pass:
-            - s_eq: 'false'
     mqc-generalstats-FREEMIX:
         fail:
             - gt: 1

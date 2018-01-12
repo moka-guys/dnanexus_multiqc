@@ -35,6 +35,8 @@
         "name": "git"
       }
     ],
+    "distribution" : "Ubuntu",
+    "release":"14.04",
     "file": "src/code.sh",
     "interpreter": "bash"
   },

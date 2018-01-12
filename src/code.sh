@@ -6,7 +6,7 @@
 set -e -x -o pipefail
 
 # capture the variable $NGS_date from the runname variable to rename the multiqc output
-NGS_date=$(echo $project_for_multiqc | cut -d'_' -f 2);
+project=$(echo $project_for_multiqc | sed 's/002_//');
 
 #read the api key as a variable
 API_KEY=$(cat '/home/dnanexus/auth_key')
@@ -20,14 +20,19 @@ cd to_test
 dx download $project_for_multiqc:QC/* --auth $API_KEY
 
 # check if there are any dragen output files
-# list all files which match the string in the output folder
-# pass this list to grep using -c which just outputs the count
-mapping_metrics_count=$(dx ls $project_for_multiqc:/output/*mapping_metrics.csv --auth K2v2COMKM7NdjeHyWdINUSrCrHaJfnxZ | grep -c mapping_metrics)
 
-# if there are files to download
-if $mapping_metrics_count > 0:
+# list all files in the output folder
+# pass this list to grep using -c which just outputs the count of files which match mapping_metrics
+mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv" --auth $API_KEY | wc -l)
+
+# if there are mapping metrics files to download
+if [ $mapping_metrics_count -ne 0 ]
+then
 	# download them
-	dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth K2v2COMKM7NdjeHyWdINUSrCrHaJfnxZ
+	dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth $API_KEY
+	echo "downloading mapping metrics files"
+else
+	echo "no mapping metrics files in output folder"
 fi
 
 
@@ -36,12 +41,12 @@ fi
 # 
 # If "Stats.json" is present, the `dx find data` command below returns: 
 # closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
-# The command `cut -f8 -d ''` extracts the file ID from the eight field of this string, using space as a delimiter.
-# The command `tr -d '()'` deletes bracket characters from the file ID.
+# The command `cut -f 2 -d '('` splits the string on '(' and takes the second item in the list .
+# The command `tr -d ')'` deletes the close bracket character from the file ID.
 #
 # When the commands are piped in the order mentioned and a "Stats.json" file is present, then 
 # $stats_json="file-F74GXP80QBG98Xg2Gy4G7ggF", else $stats_json="".
-stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" | cut -f8 -d ' ' | tr -d '()')
+stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY | cut -f 2 -d '(' | tr -d '()')
 
 # Test if the string contained in $stats_json starts with "file", then download, else continue.
 # Confirms that a Stats.json file was found (non-empty string), and that the file ID was properly extracted by `cut` and `tr`
@@ -57,19 +62,22 @@ cd ..
 
 ####  Download and install Python and MultiQC
 #download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:file-F9F0fgj0jy1y61bzJj45Yp0X  --auth $API_KEY
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:file-F9Fff2j0jy1jkfP2JBkx2z65  --auth $API_KEY
 
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
 #export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
+#conda update -y
 # use conda to download all packages required
-conda install jinja2 click markupsafe simplejson freetype networkx=1.11 -y
+conda install jinja2 click markupsafe simplejson freetype networkx=2.0 -y
 
 # Clone and install MultiQC from master branch of moka-guys fork
 git clone https://github.com/moka-guys/MultiQC.git
+
 cd MultiQC
+git checkout develop
 python setup.py install
 cd ..
 
@@ -94,10 +102,10 @@ mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
 
 # Run multiQC
 # Command is : multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
-multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$NGS_date-multiqc.html -c $multiqc_config
+multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$project-multiqc.html -c $multiqc_config
 
-# copy the config file used to output folder
-mv $multiqc_config /home/dnanexus/out/multiqc/QC/multiqc/
+# copy the config file used to multiqc data output folder
+mv $multiqc_config /home/dnanexus/out/multiqc/QC/multiqc/$project-multiqc_data/
 
 # Upload results
 dx-upload-all-outputs

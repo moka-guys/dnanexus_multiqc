@@ -1,5 +1,5 @@
 # dnanexus_multiqc v 1.3
-ewels/MultiQC [v1.4dev](https://github.com/ewels/MultiQC/)
+ewels/MultiQC [v1.4](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
 This app runs MultiQC to generate run wide QC using the outputs from MokaPipe and MokaWES pipelines including:
@@ -20,11 +20,11 @@ This project must have a folder 'QC' within the root of the project.
 All files from this folder are downloaded and parsed by MultiQC
 
 QC files are also downloaded from other locations:
-* if demultiplexing was performed by bcl2fastq v2.20 (or later) 'Stats.json' is downloaded from  Data/Intensities/BaseCalls/Stats 
-* if the MokaWES pipeline was run mapping_metrics.csv files are downloaded from the output folder.
+* if demultiplexing was performed by bcl2fastq v2.20 (or later) 'Stats.json' is downloaded from  /runfolder/Data/Intensities/BaseCalls/Stats 
+* if the MokaWES pipeline was run, mapping_metrics.csv files are downloaded from /output.
 
 ## What does this app output?
-1. A HTML QC report which should be uploaded to stickie.be
+1. A HTML QC report (with the name of the runfolder) which should be uploaded to stickie.be
 2. A folder containing the output in text format.
 
 The outputs are placed in /QC/multiqc
