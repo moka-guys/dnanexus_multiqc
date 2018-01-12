@@ -62,7 +62,7 @@ cd ..
 
 ####  Download and install Python and MultiQC
 #download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:file-F9Fff2j0jy1jkfP2JBkx2z65  --auth $API_KEY
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh  --auth $API_KEY
 
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
