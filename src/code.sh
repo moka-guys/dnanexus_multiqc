@@ -8,8 +8,6 @@ set -e -x -o pipefail
 # capture the variable $NGS_date from the runname variable to rename the multiqc output
 project=$(echo $project_for_multiqc | sed 's/002_//');
 
-#read the api key as a variable
-API_KEY=$(cat '/home/dnanexus/auth_key')
 
 # make and cd to the folder which multiqc will run in
 mkdir to_test
@@ -17,17 +15,17 @@ cd to_test
 
 # *MOST* QC files are stored at /QC/
 # to make this futureproof download entire contents of this folder within $project_for_multiqc.
-dx download $project_for_multiqc:QC/* --auth $API_KEY
+dx download $project_for_multiqc:QC/* 
 
 # check if there are any dragen output files (named mapping_metrics.csv) using dx find
 # pipe this to wc -l to find number of files found. if no files are found wc -l ==0 
-mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv" --auth $API_KEY | wc -l)
+mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv"  | wc -l)
 
 # if there are mapping metrics files to download
 if [ $mapping_metrics_count -ne 0 ]
 then
 	# download them
-	dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth $API_KEY
+	dx download $project_for_multiqc:/output/*mapping_metrics.csv
 	echo "downloading mapping metrics files"
 else
 	echo "no mapping metrics files in output folder"
@@ -44,13 +42,13 @@ fi
 #
 # When the commands are piped in the order mentioned and a "Stats.json" file is present, then 
 # $stats_json="file-F74GXP80QBG98Xg2Gy4G7ggF", else $stats_json="".
-stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY | cut -f 2 -d '(' | tr -d '()')
+stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" | cut -f 2 -d '(' | tr -d '()')
 
 # Test if the string contained in $stats_json starts with "file", then download, else continue.
 # Confirms that a Stats.json file was found (non-empty string), and that the file ID was properly extracted by `cut` and `tr`
 if [[ $stats_json =~ ^"file" ]]  # [[ string =~ pattern ]]; performs regular expression match on 'string' using 'pattern'
 then 
-dx download $stats_json --auth $API_KEY
+dx download $stats_json 
 else
 echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fastq2 stats not included in summary"
 fi
@@ -60,7 +58,7 @@ cd ..
 
 ####  Download and install Python and MultiQC
 #download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh  --auth $API_KEY
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh
 
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda

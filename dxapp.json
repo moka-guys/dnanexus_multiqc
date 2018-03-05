@@ -1,13 +1,13 @@
 {
-  "name": "multiqc_v1.4",
-  "title": "MultiQC_v1.4",
-  "summary": "v1.4 - Generates a run-wide QC report on various QC data files",
+  "name": "multiqc_v1.5",
+  "title": "MultiQC_v1.5",
+  "summary": "v1.5 - Generates a run-wide QC report on various QC data files",
   "tags": [
     "Read QC",
     "Statistics"
   ],
   "properties": {
-    "github release": "v1.4"
+    "github release": "v1.5"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -43,7 +43,8 @@
   "access": {
     "network": [
       "*"
-    ]
+    ],
+    "allProjects": "VIEW"
   },
   "regionalOptions": {
     "aws:us-east-1": {
