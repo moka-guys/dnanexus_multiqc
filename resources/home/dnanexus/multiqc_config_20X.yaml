@@ -129,7 +129,7 @@ table_columns_visible:
     Peddy:
         ancestry-prediction: False
         family_id: False
-        sex_het_ratio: False
+        sex_het_ratio: True
         sex_error: True
     verifyBAMID:
         CHIPMIX: False

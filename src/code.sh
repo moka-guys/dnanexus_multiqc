@@ -69,7 +69,7 @@ bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 export PATH="$HOME/Miniconda/bin:$PATH"
 
 # use conda to download all packages required
-conda install jinja2 click markupsafe simplejson freetype networkx=2.0 -y
+conda install jinja2=2.10 click=6.7 markupsafe=1.0 simplejson=3.13.2 freetype=2.8 networkx=2.0 -y
 
 # Clone and install MultiQC from master branch of moka-guys fork
 git clone https://github.com/moka-guys/MultiQC.git
