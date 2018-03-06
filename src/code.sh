@@ -5,11 +5,12 @@
 # and to output each line as it is executed -- useful for debugging
 set -e -x -o pipefail
 
+#read the api key as a variable	
+API_KEY=$(cat '/home/dnanexus/auth_key')
+
 # capture the variable $NGS_date from the runname variable to rename the multiqc output
 project=$(echo $project_for_multiqc | sed 's/002_//');
 
-#read the api key as a variable
-API_KEY=$(cat '/home/dnanexus/auth_key')
 
 # make and cd to the folder which multiqc will run in
 mkdir to_test
@@ -17,7 +18,7 @@ cd to_test
 
 # *MOST* QC files are stored at /QC/
 # to make this futureproof download entire contents of this folder within $project_for_multiqc.
-dx download $project_for_multiqc:QC/* --auth $API_KEY
+dx download $project_for_multiqc:QC/*  --auth $API_KEY
 
 # check if there are any dragen output files (named mapping_metrics.csv) using dx find
 # pipe this to wc -l to find number of files found. if no files are found wc -l ==0 
@@ -60,7 +61,7 @@ cd ..
 
 ####  Download and install Python and MultiQC
 #download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh  --auth $API_KEY
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh --auth $API_KEY
 
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
