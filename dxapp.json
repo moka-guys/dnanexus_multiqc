@@ -43,8 +43,7 @@
   "access": {
     "network": [
       "*"
-    ],
-    "allProjects": "VIEW"
+    ]
   },
   "regionalOptions": {
     "aws:us-east-1": {
