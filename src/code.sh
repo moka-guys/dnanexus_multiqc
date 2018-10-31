@@ -60,17 +60,17 @@ fi
 cd ..
 
 ####  Download and install Python and MultiQC
-# download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh --auth $API_KEY
+# Download Miniconda3 from 001
+dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda3-latest-Linux-x86_64.sh --auth $API_KEY
 
-# install Anaconda
-bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
+# Install Anaconda
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
-# export to path
+# Export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
 
 # Clone and install MultiQC from master branch of moka-guys fork
-git clone https://github.com/moka-guys/MultiQC.git
+git clone https://github.com/moka-guys/MultiQC.git dev_v1.6 # Dev
 
 cd MultiQC
 python setup.py install
