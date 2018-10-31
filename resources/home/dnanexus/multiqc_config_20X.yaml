@@ -127,6 +127,8 @@ table_columns_visible:
         percent_fails: False
         total_sequences: True
     Peddy:
+        predicted_sex_sex_check: False
+        ancestry-prob_het_check: False    
         ancestry-prediction: False
         family_id: False
         sex_het_ratio: True

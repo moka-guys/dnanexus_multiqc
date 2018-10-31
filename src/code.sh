@@ -60,17 +60,14 @@ fi
 cd ..
 
 ####  Download and install Python and MultiQC
-#download miniconda from 001
+# download miniconda from 001
 dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh --auth $API_KEY
 
 # install Anaconda
 bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
 
-#export to path
+# export to path
 export PATH="$HOME/Miniconda/bin:$PATH"
-
-# use conda to download all packages required
-conda install jinja2=2.10 click=6.7 markupsafe=1.0 simplejson=3.13.2 freetype=2.8 networkx=2.0 matplotlib==2.1.1 -y
 
 # Clone and install MultiQC from master branch of moka-guys fork
 git clone https://github.com/moka-guys/MultiQC.git
@@ -78,6 +75,9 @@ git clone https://github.com/moka-guys/MultiQC.git
 cd MultiQC
 python setup.py install
 cd ..
+
+# use conda to download all packages required
+conda install jinja2=2.10 click=6.7 markupsafe=1.0 simplejson=3.13.2 freetype=2.8 networkx=2.0 matplotlib==2.1.1 -y
 
 #### Set MultiQC parameters
 #set flag to see if any WES samples are present
