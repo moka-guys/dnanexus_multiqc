@@ -136,10 +136,12 @@ table_columns_visible:
     verifyBAMID:
         CHIPMIX: False
 
+# Set picard configs
 picard_config:
     general_stats_target_coverage:
         - 20
 
+# Set conditional formatting rules for general stats FREEMIX
 table_cond_formatting_rules:
     mqc-generalstats-FREEMIX:
         fail:
@@ -147,3 +149,10 @@ table_cond_formatting_rules:
             - eq: 1
         pass:
             - lt: 1
+
+# Remove plots from HMTL report
+remove_sections:
+    # For peddy, keep only the sex-check plot
+    - peddy-pca-plot
+    - peddy-relatedness-plot
+    - peddy-hetcheck-plot

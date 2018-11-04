@@ -11,8 +11,10 @@ find_dragen_qc() {
     # Download dragen output files if ${mapping_metrics_count} does not equal 0. Else continue
     if [ $mapping_metrics_count -ne 0 ]; then
         dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth $API_KEY
-		# Convert dragen mapping metrics files to picard markduplicates format for recognition by multiqc.
+		# Convert dragen mapping metrics files to picard markduplicates format for recognition by multiqc
 		python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
+        # Delete the template file so it does not appear in the multiqc report
+        rm template.output.metrics
     else
         echo "INFO: No mapping metrics files in output folder"
     fi
