@@ -23,7 +23,7 @@ find_bcl2fastq_qc() {
     # the command returns the following string, which is piped to egrep to extract the file ID with a regular expression:
     # closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
     # File present: ${stats_json} --> "file-F74GXP80QBG98Xg2Gy4G7ggF"
-    # File not foud: ${stats_json} --> ""
+    # File not found: ${stats_json} --> ""
     stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY | egrep -o 'file-\w+' )
     # Download "Stats.json" if found, by testing that a file ID was saved to the $stats_json variable
     # [[ string =~ ^"pattern" ]]; performs regular expression match that 'string' starts with 'pattern'
@@ -64,11 +64,11 @@ main() {
 	fi
 
     # Pull multiqc docker image to cloud worker
-    dx-docker pull ewels/MultiQC:v1.6
+    dx-docker pull ewels/multiqc:v1.6
     # Call multiQC with the following parameters :
     #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
-	dx-docker run -v /home/dnanexus:/multiqc/sandbox ewels/MultiQC:v1.6 multiqc sandbox \
-	    -n sandbox/${outdir}/${project}-multiqc.html -c sandbox/dnanexus_multiqc_config.yaml
+    dx-docker run -v /home/dnanexus:/sandbox ewels/multiqc:v1.6 multiqc sandbox/ \
+        -n sandbox/${outdir}/${project}-multiqc.html -c sandbox/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc
     mv dnanexus_multiqc_config.yaml ${outdir}/${project}-multiqc_data/
