@@ -139,7 +139,7 @@ table_columns_visible:
 # Set picard configs
 picard_config:
     general_stats_target_coverage:
-        - 20
+        - 30
 
 # Set conditional formatting rules for general stats FREEMIX
 table_cond_formatting_rules:

@@ -16,6 +16,13 @@
       "label": "project to get the MultiQC treatment",
       "help": "The project to get the MultiQC treatment",
       "class": "string"
+    },
+    {
+      "name": "coverage_level",
+      "label": "coverage level",
+      "help": "Set the coverage level for the picard general stats table. E.g. '20' for % target bases with coverage >= 20X",
+      "class": "string",
+      "optional": true
     }
   ],
   "outputSpec": [

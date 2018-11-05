@@ -20,14 +20,20 @@ Additional QC files are downloaded from other locations:
 * If the MokaWES pipeline was run, mapping_metrics.csv files are downloaded from /output.
 
 ## What does this app output?
-1. A HTML QC report (with the name of the runfolder) which should be uploaded to stickie.be
-2. A folder containing the output in text format.
+* A HTML QC report (with the name of the runfolder) which should be uploaded to the Viapath Genome Informatics server.
+* A folder containing the output in text format.
 
 The outputs are placed in the project under '/QC/multiqc'
 
 ## How does this app work?
-* The app parses the file names to determine if any of the samples are WES samples (Pan493). If yes, coverage is reported at 20X. Else, coverage is reported at 30X. The app edits the bundled 'dnanexus_multiqc_config.yaml' to reflect this. The parameters in this file are then passed with calls to MultiQC.
-* The app converts dragen mapping metrics files to the picard markduplicates file format. The percantage duplicates metric from dragen is then reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.  
+1. The app downloads the QC files from the project.
+2. The app converts dragen mapping metrics files to the picard markduplicates file format. The percantage duplicates metric from dragen is then reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.
+3. The multiqc general stats table reports the percent of samples above a minimum-fold coverage. This minimum value is determined by the app inputs. The app edits the bundled 'dnanexus_multiqc_config.yaml' with this parameter.
+    * If a string input is passed to the app's 'coverage_level' parameter, that value is set as the config file coverage.
+    * Otherwise, if the WES panel number (Pan493) is present in any of the input sample names, coverage is set to '20'.
+    * If neither of these conditions are satisfied, the default coverage of '30' is used.
+4. MultiQC is called with the config file using docker.
+5. The outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
 * If the run is a mix of WES and non-WES coverage will be reported at 20X.

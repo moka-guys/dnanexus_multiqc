@@ -36,9 +36,28 @@ find_bcl2fastq_qc() {
     fi
 }
 
+set_general_stats_coverage() {
+    # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs.
+    # If coverage_level is given as a script option, store it in the config_cov variable.
+    # This uses the bash test option -z which, when negated with !, returns True if $coverage_level is not empty.
+    if [[ ! -z $coverage_level ]]; then
+        config_cov=$coverage_level
+    # Else if WES samples are present, set the coverage to 30 by searching for Pan493 in filename
+    elif [ $(ls $HOME | grep Pan493 | wc -l) -ne 0 ]; then
+        config_cov="20"
+    # In all other cases, leave the coverage to 30X, which is the default value in the config yaml
+    else
+        config_cov="30"
+    fi
+	# Edit config to report general stats minimum coverage at the value set.
+    # Here, the sed command uses 'n;' to substitute the default coverage in the config file (30),
+    # for the value set in ${config_cov}.
+	sed -i "/general_stats_target_coverage/{n;s/30/${config_cov}/}" dnanexus_multiqc_config.yaml
+}
 
 main() {
-	# SET VARIABLES
+
+    # SET VARIABLES
     # Store the API key. Grants the script access to DNAnexus resources    
     API_KEY=$(cat '/home/dnanexus/auth_key')
     # Capture the project runfolder name. Names the multiqc HTML input and builds the output file path
@@ -57,13 +76,8 @@ main() {
     # Download bcl2fastq QC files if found in the project
     find_bcl2fastq_qc
 
-    # Format dnanexus_multiqc_config.yaml file based on project input. Check if WES samples are
-	# present by searching for Pan493 in filename
-    if [ $(ls $HOME | grep Pan493 | wc -l) -ne 0 ]; then
-		# Edit config to report coverage at 20X in general stats table. Note: Picard coverage metrics 
-	    # reported in the bundled multiqc config file are set to 30X by default (for custom panels).
-	    sed '/general_stats_target_coverage/{n;s/30/20/}' dnanexus_multiqc_config.yaml
-	fi
+    # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs
+    set_general_stats_coverage
 
     # Pull multiqc docker image to cloud worker
     dx-docker pull ewels/multiqc:v1.6
