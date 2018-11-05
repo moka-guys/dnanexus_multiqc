@@ -154,6 +154,11 @@ table_cond_formatting_rules:
 table_columns_visible:
     bcl2fastq:
         total: False
+    Peddy:
+        family_id: False
+        ancestry-prediction: False
+        ancestry-prob_het_check: False
+        predicted_sex_sex_check: False
 
 # Remove plots from HTML report
 remove_sections:
