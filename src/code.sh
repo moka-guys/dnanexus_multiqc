@@ -22,7 +22,10 @@ find_dragen_qc() {
 
 find_bcl2fastq_qc() {
     # Search for the file bcl2fastq QC file ("Stats.json") using `dx find data`. If the file is found,
-    # the command returns the following string, which is piped to egrep to extract the file ID with a regular expression:
+    # the command returns the following string, which is piped to egrep to extract the file ID with a regular expression.
+    #     The expression 'file-\w+' searches for the string 'file-', followed by one or more word character,
+    #     which is equivalent to [a-zA-Z0-9_]. egrep is required to use these regular expressions.
+    #     The option -o returns this captured string from egrep.
     # closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
     # File present: ${stats_json} --> "file-F74GXP80QBG98Xg2Gy4G7ggF"
     # File not found: ${stats_json} --> ""
@@ -83,6 +86,10 @@ main() {
     dx-docker pull ewels/multiqc:v1.6
     # Call multiQC with the following parameters :
     #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
+    # The docker option -v mounts a local directory to the docker environment in the format:
+    #    -v local_dir:docker_dir
+    # Here, the directory 'sandbox' is mapped to the /home/dnanexus directory, and passed to
+    # multiqc to search for output files. Docker maps any new files back to this location on the DNAnexus worker.
     dx-docker run -v /home/dnanexus:/sandbox ewels/multiqc:v1.6 multiqc sandbox/ \
         -n sandbox/${outdir}/${project}-multiqc.html -c sandbox/dnanexus_multiqc_config.yaml
 
