@@ -150,7 +150,12 @@ table_cond_formatting_rules:
         pass:
             - lt: 1
 
-# Remove plots from HMTL report
+# Hide columns from the HTML report tables
+table_columns_visible:
+    bcl2fastq:
+        total: False
+
+# Remove plots from HTML report
 remove_sections:
     # For peddy, keep only the sex-check plot
     - peddy-pca-plot

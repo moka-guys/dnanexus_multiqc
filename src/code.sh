@@ -75,7 +75,7 @@ main() {
     # Move the config file to the multiqc data output folder. This was created by running multiqc
     mv dnanexus_multiqc_config.yaml ${outdir}/${project}-multiqc_data/
     # Move the multiqc report HTML to the output directory for uploading to the Viapath server
-    mv ${outdir}/*.html ${report_outdir}
+    mv ${outdir}/${project}-multiqc.html ${report_outdir}
 
     # Upload results
     dx-upload-all-outputs
