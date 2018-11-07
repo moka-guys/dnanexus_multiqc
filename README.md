@@ -32,7 +32,9 @@ The outputs are placed in the project under '/QC/multiqc'
     * If a string input is passed to the app's 'coverage_level' parameter, that value is set as the config file coverage.
     * Otherwise, if the WES panel number (Pan493) is present in any of the input sample names, coverage is set to '20'.
     * If neither of these conditions are satisfied, the default coverage of '30' is used.
-4. MultiQC is called with the config file using docker.
+4. MultiQC is called with the config file using docker. The docker image is stored on DNAnexus as an asset, which is bundled with the app build. The following commands were used to generate this asset in a cloud workstation:
+    * `docker pull ewels/multiqc@sha256:5d749b0caaefc70a1d1a07a22da03d22902b8a21c9ef6e383160291a3092295f`
+    * `dx-docker create-asset d9b834ed653b`
 5. The outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
