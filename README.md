@@ -27,18 +27,20 @@ The outputs are placed in the project under '/QC/multiqc'
 
 ## How does this app work?
 1. The app downloads the QC files from the project.
-2. The app converts dragen mapping metrics files to the picard markduplicates file format. The percantage duplicates metric from dragen is then reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.
+2. The app converts dragen mapping metrics files to the picard markduplicates file format if required. The percentage duplicates metric from dragen is then reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.
 3. The multiqc general stats table reports the percent of samples above a minimum-fold coverage. This minimum value is determined by the app inputs. The app edits the bundled 'dnanexus_multiqc_config.yaml' with this parameter.
     * If a string input is passed to the app's 'coverage_level' parameter, that value is set as the config file coverage.
     * Otherwise, if the WES panel number (Pan493) is present in any of the input sample names, coverage is set to '20'.
     * If neither of these conditions are satisfied, the default coverage of '30' is used.
-4. MultiQC is called with the config file using docker. The docker image is stored on DNAnexus as an asset, which is bundled with the app build. The following commands were used to generate this asset in a cloud workstation:
-    * `docker pull ewels/multiqc@sha256:5d749b0caaefc70a1d1a07a22da03d22902b8a21c9ef6e383160291a3092295f`
-    * `dx-docker create-asset d9b834ed653b`
+4. A dockerised version of MultiQC is used. The docker image is stored on DNAnexus as an asset, which is bundled with the app build. The following commands were used to generate this asset in a cloud workstation:
+    * `docker pull ewels/multiqc:v1.6`
+    * `dx-docker create-asset ewels/multiqc:v1.6`
+    * The asset on DNAnexus was then renamed with the following command: `dx mv ewels\\multiqc\\:v1.6 ewels_multiqc_v1.6`
 5. The outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
 * If the run is a mix of WES and non-WES coverage will be reported at 20X.
 * The project which MultiQC is run on must be shared with the user mokaguys
+* Only one value can be given to the coverage_level parameter, which may not be ideal for runs with mixed samples. Multiple reports may be required in these cases
 
 ## This app was made by Viapath Genome Informatics 
