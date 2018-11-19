@@ -21,26 +21,27 @@ find_dragen_qc() {
 }
 
 find_bcl2fastq_qc() {
-    # Search for the file bcl2fastq QC file ("Stats.json") using `dx find data`. If the file is found,
-    # the command returns the following string, which is piped to egrep to extract the file ID with a regular expression.
-    #     The expression 'file-\w+' searches for the string 'file-', followed by one or more word character,
-    #     which is equivalent to [a-zA-Z0-9_]. egrep is required to use these regular expressions.
-    #     The option -o returns this captured string from egrep.
-    # closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
-    # File present: ${stats_json} --> "file-F74GXP80QBG98Xg2Gy4G7ggF"
-    # File not found: ${stats_json} --> ""
-    stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY | egrep -o 'file-\w+' )
-    # Download "Stats.json" if found, by testing that a file ID was saved to the $stats_json variable
-    # [[ string =~ ^"pattern" ]]; performs regular expression match that 'string' starts with 'pattern'
-    if [[ $stats_json =~ ^"file" ]]; then 
-        dx download $stats_json --auth $API_KEY
+    # Download the bcl2fastq QC file from DNANexus.
+
+    # Search the input project for the bcl2fastq "Stats.json" file. Example if found:
+    #     data_search="closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)"
+    data_search=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY)
+
+    # Print message and continue if $data_search is empty. This indiciates that "Stats.json" was not found.
+    if [ -z $data_search ]; then
+        echo "No Stats.json file found in project ${project_for_multiqc}, bcl2fastq2 stats not included in summary"
     else
-        echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fastq2 stats not included in summary"
+        # Else extract the file ID and download. Note:
+        #   - \w+ is the regular expression term for one or more word characters: [A-Za-z0-9_]
+        #   - egrep extends grep to use regular expressions
+        stats_json=$(egrep -o 'file-\w+' <<< $data_search)
+        dx download $stats_json --auth $API_KEY
     fi
 }
 
 set_general_stats_coverage() {
     # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs.
+
     # If coverage_level is given as a script option, store it in the config_cov variable.
     # This uses the bash test option -z which, when negated with !, returns True if $coverage_level is not empty.
     if [[ ! -z $coverage_level ]]; then
