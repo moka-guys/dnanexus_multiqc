@@ -3,39 +3,44 @@
 # Exit at any point if there is any error and output each line as it is executed (for debugging)
 set -e -x -o pipefail
 
-find_dragen_qc() {
-    # Check if there are any dragen output files (suffix 'mapping_metrics.csv') using dx find data and
-    # pipe this to wc -l to count the number of files found.
-    mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv" --auth $API_KEY | wc -l)
+dx_find_and_download() {
+    # Download files from DNANexus project if present.
+    #
+    # Args:
+    #    $1 / name: A wildcard to capture matching files in the project.
+    #    $2 / project: A DNAnexus project to search
+    #    $3 / max_find: Integer. Function fails if more than this number of files is found. If no argument
+    #        is given, downloads all files found.
 
-    # Download dragen output files if ${mapping_metrics_count} does not equal 0. Else continue
-    if [ $mapping_metrics_count -ne 0 ]; then
-        dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth $API_KEY
-		# Convert dragen mapping metrics files to picard markduplicates format for recognition by multiqc
-		python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
-        # Delete the template file so it does not appear in the multiqc report
-        rm template.output.metrics
+    # Map input arguments to variables
+    name=$1
+    project=$2
+    max_find=$3
+
+    # Search input DNANexus project for files matching name string. Store to variable file_ids.
+    # `dx find data` returns a single space-delimited string. This result is warpped in parentheses creating a bash array.
+    # Example with two matching files: echo ${file_ids[@]}
+    # > project-FP7Q76j07v81kb4564qPFyb1:file-FP96Pp80Vf2bB7ZqJBbzbvp5 project-FP7Q76j07v81kb4564qPFyb1:file-FP96Q3801p85KY2g7GPfP6J6
+    file_ids=( $(dx find data --brief --path ${project}: --name $name --auth $API_KEY))
+
+    files_found=${#file_ids[@]} # ${#variable[@]} gives the number of elements in array $variable
+
+    # Continue if no files found matching $name in $project
+    if [ $files_found -eq 0 ]; then
+        echo "Nothing to download in $project matching $name."
+    # Else if an integer was given as the max_find argument
+    elif [[ $max_find =~ [0-9]+ ]]; then
+        # Download if number of files found is less than or equal to the max argument
+        if [ $files_found -le $max_find ]; then
+            dx download ${file_ids[@]} --auth $API_KEY
+        # Else raise error
+        else
+            echo "Found $files_found files with name $name in $project. Expected $max_find files or less."
+            exit 1
+        fi
+    # Else download all files found
     else
-        echo "INFO: No mapping metrics files in output folder"
-    fi
-}
-
-find_bcl2fastq_qc() {
-    # Download the bcl2fastq QC file from DNANexus.
-
-    # Search the input project for the bcl2fastq "Stats.json" file. Example if found:
-    #     data_search="closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)"
-    data_search=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY)
-
-    # Continue if $data_search is empty. This indicates that "Stats.json" was not found.
-    if [ -z $data_search ]; then
-        echo "No Stats.json file found in project ${project_for_multiqc}, bcl2fastq2 stats not included in summary"
-    else
-        # Else extract the file ID and download. Note:
-        #   - \w+ is the regular expression term for one or more word characters: [A-Za-z0-9_]
-        #   - egrep extends grep to use regular expressions
-        stats_json=$(egrep -o 'file-\w+' <<< $data_search)
-        dx download $stats_json --auth $API_KEY
+        dx download ${file_ids[@]} --auth $API_KEY
     fi
 }
 
@@ -60,7 +65,6 @@ set_general_stats_coverage() {
 }
 
 main() {
-
     # SET VARIABLES
     # Store the API key. Grants the script access to DNAnexus resources    
     API_KEY=$(cat '/home/dnanexus/auth_key')
@@ -74,11 +78,13 @@ main() {
     # Files for multiqc are stored at 'project_for_multiqc:/QC/''. Download the contents of this folder.
     dx download ${project_for_multiqc}:QC/* --auth ${API_KEY}
 
-    # Download and reformat dragen markduplicates files as picard files if found in the project
-    find_dragen_qc
+    # Download dragen markduplicates files if found in the project
+    dx_find_and_download "*mapping_metrics.csv" $project_for_multiqc 
+    # Convert any downloaded dragen mapping metrics files to picard markduplicates format for recognition by multiqc
+    python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
 
     # Download bcl2fastq QC files if found in the project
-    find_bcl2fastq_qc
+    dx_find_and_download 'Stats.json' $project_for_multiqc 1
 
     # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs
     set_general_stats_coverage

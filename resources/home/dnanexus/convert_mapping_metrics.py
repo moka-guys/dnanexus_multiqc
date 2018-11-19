@@ -27,7 +27,7 @@ def reformat(mapping_metrics, out_template):
     # Remove the extension from the sample name. os.path.splitext splits the filename into a string,
     # delimited by the extension. E.g.:
     #    os.path.splitext("myfile1.txt") --> [ 'myfile', '.txt' ]
-    # This is selected by index [0] to get the first item, which is the sample name 
+    # This is selected by index [0] to get the first item, which is the sample name
     sample = os.path.splitext(sample_basename)[0]
 
     # Open the input dragen mapping metrics file and get the percentage duplicates value
@@ -67,9 +67,15 @@ def main(args):
     # Loop over the input file argments. Where the script is given input files as *.csv,
     # parsed.inputs --> ['file1.csv', 'file2.csv', 'file3.csv'...]
     for infile in parsed.inputs:
-        # Run the reformatting protocol on all script input files. The reformatting function requires
-        # a jinja2-formatted template file, read from the command line as parsed.template
-        reformat(infile, out_template=parsed.template)
+        try:
+            # Run the reformatting protocol on all script input files. The reformatting function requires
+            # a jinja2-formatted template file, read from the command line as parsed.template
+            reformat(infile, out_template=parsed.template)
+        except IOError:
+            # Skip file if not found
+            pass
 
 if __name__ == '__main__':
+    print("Calling convert_mapping_metrics.py")
     main(sys.argv[1:])
+    print("convert_mapping_metrics.py complete.")

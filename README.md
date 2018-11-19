@@ -26,9 +26,10 @@ Additional QC files are downloaded from other locations:
 The outputs are placed in the project under '/QC/multiqc'
 
 ## How does this app work?
-1. The app downloads the QC files from the project.
-2. The app converts dragen mapping metrics files to the picard markduplicates file format if required. The percentage duplicates metric from dragen is then reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.
-3. The multiqc general stats table reports the percent of samples above a minimum-fold coverage. This minimum value is determined by the app inputs. The app edits the bundled 'dnanexus_multiqc_config.yaml' with this parameter.
+1. The app downloads files found in the QC/ directory of the project.
+2. The dx_find_and_download function is used to search for specific files, which are downloaded only if found.
+2. If dragen mapping metrics files are present, the app converts them to the picard markduplicates file format. This allows the percentage duplicates metric from dragen to be reported in the MultiQC stats table for these samples. The script to make the conversion ('convert_mapping_metrics.py') is bundled with the app, along with the picard output.metrics template it requires.
+3. The app sets the minimum-fold coverage reported in the general stats table by editing 'dnanexus_multiqc_config.yaml', based on the apps inputs:
     * If a string input is passed to the app's 'coverage_level' parameter, that value is set as the config file coverage.
     * Otherwise, if the WES panel number (Pan493) is present in any of the input sample names, coverage is set to '20'.
     * If neither of these conditions are satisfied, the default coverage of '30' is used.
@@ -36,7 +37,7 @@ The outputs are placed in the project under '/QC/multiqc'
     * `docker pull ewels/multiqc:v1.6`
     * `dx-docker create-asset ewels/multiqc:v1.6`
     * The asset on DNAnexus was then renamed with the following command: `dx mv ewels\\multiqc\\:v1.6 ewels_multiqc_v1.6`
-5. The outputs are uploaded to DNAnexus.
+5. The MultiQC outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
 * If the run is a mix of WES and non-WES coverage will be reported at 20X.
