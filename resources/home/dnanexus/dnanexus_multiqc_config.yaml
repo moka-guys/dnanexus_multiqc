@@ -123,14 +123,17 @@ sp:
 
 # Overwrite the defaults of which table columns are visible by default
 table_columns_visible:
+    bcl2fastq:
+        total: False
     FastQC:
         percent_fails: False
         total_sequences: True
     Peddy:
-        predicted_sex_sex_check: False
-        ancestry-prob_het_check: False    
-        ancestry-prediction: False
         family_id: False
+        ancestry-prediction: False
+        ancestry-prob_het_check: False
+        predicted_sex_sex_check: False
+        predicted_sex_sex_check: False    
         sex_het_ratio: True
         sex_error: True
     verifyBAMID:
@@ -149,16 +152,6 @@ table_cond_formatting_rules:
             - eq: 1
         pass:
             - lt: 1
-
-# Hide columns from the HTML report tables
-table_columns_visible:
-    bcl2fastq:
-        total: False
-    Peddy:
-        family_id: False
-        ancestry-prediction: False
-        ancestry-prob_het_check: False
-        predicted_sex_sex_check: False
 
 # Remove plots from HTML report
 remove_sections:

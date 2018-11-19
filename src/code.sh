@@ -27,7 +27,7 @@ find_bcl2fastq_qc() {
     #     data_search="closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)"
     data_search=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY)
 
-    # Print message and continue if $data_search is empty. This indiciates that "Stats.json" was not found.
+    # Continue if $data_search is empty. This indicates that "Stats.json" was not found.
     if [ -z $data_search ]; then
         echo "No Stats.json file found in project ${project_for_multiqc}, bcl2fastq2 stats not included in summary"
     else
