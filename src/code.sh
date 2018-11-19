@@ -58,9 +58,8 @@ set_general_stats_coverage() {
     else
         config_cov="30"
     fi
-	# Edit config to report general stats minimum coverage at the value set.
-    # Here, the sed command uses 'n;' to substitute the default coverage in the config file (30),
-    # for the value set in ${config_cov}.
+	# Subsitute the default coverage in the config file for $config_cov
+    #   - 'n;' makes the substitution occur on the line after the first instance of "general_stats_target_coverage" 
 	sed -i "/general_stats_target_coverage/{n;s/30/${config_cov}/}" dnanexus_multiqc_config.yaml
 }
 
