@@ -20,9 +20,10 @@
     {
       "name": "coverage_level",
       "label": "coverage level",
-      "help": "Set the coverage level for the picard general stats table. E.g. '20' for % target bases with coverage >= 20X",
+      "help": "Set the (picard) coverage level reported in the card general stats table. E.g. '20' for % target bases with coverage >= 20X",
       "class": "string",
-      "optional": true
+      "choices": ["2", "10", "30", "40", "50", "100"],
+      "default": "30"
     }
   ],
   "outputSpec": [
