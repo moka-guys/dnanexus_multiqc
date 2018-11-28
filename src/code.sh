@@ -1,109 +1,108 @@
 #!/bin/bash
-#
 
-# The following line causes bash to exit at any point if there is any error
-# and to output each line as it is executed -- useful for debugging
+# Exit at any point if there is any error and output each line as it is executed (for debugging)
 set -e -x -o pipefail
 
-#read the api key as a variable	
-API_KEY=$(cat '/home/dnanexus/auth_key')
+dx_find_and_download() {
+    # Download files from DNANexus project if present.
+    #
+    # Args:
+    #    $1 / name: A wildcard to capture matching files in the project.
+    #    $2 / project: A DNAnexus project to search
+    #    $3 / max_find: Integer. Function fails if more than this number of files is found. If no argument
+    #        is given, downloads all files found.
 
-# capture the variable $NGS_date from the runname variable to rename the multiqc output
-project=$(echo $project_for_multiqc | sed 's/002_//');
+    # Map input arguments to variables
+    name=$1
+    project=$2
+    max_find=$3
 
+    # Search input DNANexus project for files matching name string. Store to variable file_ids.
+    # `dx find data` returns a single space-delimited string. This result is warpped in parentheses creating a bash array.
+    # Example with two matching files: echo ${file_ids[@]}
+    # > project-FP7Q76j07v81kb4564qPFyb1:file-FP96Pp80Vf2bB7ZqJBbzbvp5 project-FP7Q76j07v81kb4564qPFyb1:file-FP96Q3801p85KY2g7GPfP6J6
+    file_ids=( $(dx find data --brief --path ${project}: --name $name --auth $API_KEY))
 
-# make and cd to the folder which multiqc will run in
-mkdir to_test
-cd to_test
+    files_found=${#file_ids[@]} # ${#variable[@]} gives the number of elements in array $variable
 
-# *MOST* QC files are stored at /QC/
-# to make this futureproof download entire contents of this folder within $project_for_multiqc.
-dx download $project_for_multiqc:QC/*  --auth $API_KEY
+    # Continue if no files found matching $name in $project
+    if [ $files_found -eq 0 ]; then
+        echo "Nothing to download in $project matching $name."
+    # Else if an integer was given as the max_find argument
+    elif [[ $max_find =~ [0-9]+ ]]; then
+        # Download if number of files found is less than or equal to the max argument
+        if [ $files_found -le $max_find ]; then
+            dx download ${file_ids[@]} --auth $API_KEY
+        # Else raise error
+        else
+            echo "Found $files_found files with name $name in $project. Expected $max_find files or less."
+            exit 1
+        fi
+    # Else download all files found
+    else
+        dx download ${file_ids[@]} --auth $API_KEY
+    fi
+}
 
-# check if there are any dragen output files (named mapping_metrics.csv) using dx find
-# pipe this to wc -l to find number of files found. if no files are found wc -l ==0 
-mapping_metrics_count=$(dx find data --path ${project_for_multiqc}: --name "*mapping_metrics.csv" --auth $API_KEY | wc -l)
+set_general_stats_coverage() {
+    # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs.
 
-# if there are mapping metrics files to download
-if [ $mapping_metrics_count -ne 0 ]
-then
-	# download them
-	dx download $project_for_multiqc:/output/*mapping_metrics.csv --auth $API_KEY
-	echo "downloading mapping metrics files"
-else
-	echo "no mapping metrics files in output folder"
-fi
+    # If coverage_level is given as a script option, store it in the config_cov variable.
+    # This uses the bash test option -z which, when negated with !, returns True if $coverage_level is not empty.
+    if [[ ! -z $coverage_level ]]; then
+        config_cov=$coverage_level
+    # Else if WES samples are present, set the coverage to 30 by searching for Pan493 in filename
+    elif [ $(ls $HOME | grep Pan493 | wc -l) -ne 0 ]; then
+        config_cov="20"
+    # In all other cases, leave the coverage to 30X, which is the default value in the config yaml
+    else
+        config_cov="30"
+    fi
+	# Subsitute the default coverage in the config file for $config_cov
+    #   - 'n;' makes the substitution occur on the line after the first instance of "general_stats_target_coverage" 
+	sed -i "/general_stats_target_coverage/{n;s/30/${config_cov}/}" dnanexus_multiqc_config.yaml
+}
 
+main() {
+    # SET VARIABLES
+    # Store the API key. Grants the script access to DNAnexus resources    
+    API_KEY=$(cat '/home/dnanexus/auth_key')
+    # Capture the project runfolder name. Names the multiqc HTML input and builds the output file path
+    project=$(echo $project_for_multiqc | sed 's/002_//')
+    # Assign multiqc output directory name to variable and create
+    outdir=out/multiqc/QC/multiqc && mkdir -p ${outdir}
+    # Assing multiqc report output directory name to variable and create
+    report_outdir=out/multiqc_report/QC/multiqc && mkdir -p ${report_outdir}
 
-# Stats.json is uploaded with the runfolder in Data/Intesities/BaseCalls/Stats/.
-# This search makes sure it is found in the project/runfolder regardless of project name:
-# 
-# If "Stats.json" is present, the `dx find data` command below returns: 
-# closed  2017-09-25 10:15:46 122.23 KB /Data/Intensities/BaseCalls/Stats/Stats.json (file-F74GXP80QBG98Xg2Gy4G7ggF)
-# The command `cut -f 2 -d '('` splits the string on '(' and takes the second item in the list .
-# The command `tr -d ')'` deletes the close bracket character from the file ID.
-#
-# When the commands are piped in the order mentioned and a "Stats.json" file is present, then 
-# $stats_json="file-F74GXP80QBG98Xg2Gy4G7ggF", else $stats_json="".
-stats_json=$(dx find data --path ${project_for_multiqc}: --name "Stats.json" --auth $API_KEY | cut -f 2 -d '(' | tr -d '()')
+    # Files for multiqc are stored at 'project_for_multiqc:/QC/''. Download the contents of this folder.
+    dx download ${project_for_multiqc}:QC/* --auth ${API_KEY}
 
-# Test if the string contained in $stats_json starts with "file", then download, else continue.
-# Confirms that a Stats.json file was found (non-empty string), and that the file ID was properly extracted by `cut` and `tr`
-if [[ $stats_json =~ ^"file" ]]  # [[ string =~ pattern ]]; performs regular expression match on 'string' using 'pattern'
-then 
-dx download $stats_json --auth $API_KEY
-else
-echo "No Stats.json file found in /Data/Intensities/BaseCalls/Stats/, bcl2fastq2 stats not included in summary"
-fi
+    # Download dragen markduplicates files if found in the project
+    dx_find_and_download "*mapping_metrics.csv" $project_for_multiqc 
+    # Convert any downloaded dragen mapping metrics files to picard markduplicates format for recognition by multiqc
+    python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
 
-# cd back to home
-cd ..
+    # Download bcl2fastq QC files if found in the project
+    dx_find_and_download 'Stats.json' $project_for_multiqc 1
 
-####  Download and install Python and MultiQC
-#download miniconda from 001
-dx download project-ByfFPz00jy1fk6PjpZ95F27J:Data/Miniconda/Miniconda2-latest-Linux-x86_64.sh --auth $API_KEY
+    # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs
+    set_general_stats_coverage
 
-# install Anaconda
-bash ~/Miniconda2-latest-Linux-x86_64.sh -b -p $HOME/Miniconda
+    # Call multiqc v1.6 from docker image (ewels_multiqc_v1.6). This image is an asset on DNAnexus, bundled with the app.
+    # MultiQC is run with the following parameters :
+    #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
+    # The docker -v flag mounts a local directory to the docker environment in the format:
+    #    -v local_dir:docker_dir
+    # Here, the directory 'sandbox' is mapped to the /home/dnanexus directory, and passed to
+    # multiqc to search for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
+    dx-docker run -v /home/dnanexus:/sandbox ewels/multiqc:v1.6 multiqc sandbox/ \
+        -n sandbox/${outdir}/${project}-multiqc.html -c sandbox/dnanexus_multiqc_config.yaml
 
-#export to path
-export PATH="$HOME/Miniconda/bin:$PATH"
+    # Move the config file to the multiqc data output folder. This was created by running multiqc
+    mv dnanexus_multiqc_config.yaml ${outdir}/${project}-multiqc_data/
+    # Move the multiqc report HTML to the output directory for uploading to the Viapath server
+    mv ${outdir}/${project}-multiqc.html ${report_outdir}
 
-# use conda to download all packages required
-conda install jinja2=2.10 click=6.7 markupsafe=1.0 simplejson=3.13.2 freetype=2.8 networkx=2.0 matplotlib==2.1.1 -y
-
-# Clone and install MultiQC from master branch of moka-guys fork
-git clone https://github.com/moka-guys/MultiQC.git
-
-cd MultiQC
-python setup.py install
-cd ..
-
-#### Set MultiQC parameters
-#set flag to see if any WES samples are present
-WES=FALSE
-
-# set default config file to the 30X one
-multiqc_config="/home/dnanexus/multiqc_config_30X.yaml"
-
-# If any WES samples need to report coverage @ 20X - look for any WES samples
-for f in ~/to_test/* ; do 
-	# if Pan493 in the filename
-	if [[ $f == *Pan493* ]]; then 
-		# change the config file variable to point @ 20X config file
-		multiqc_config="/home/dnanexus/multiqc_config_20X.yaml"
- 	fi
-done
-
-#make output folder
-mkdir -p /home/dnanexus/out/multiqc/QC/multiqc
-
-# Run multiQC
-# Command is : multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
-multiqc /home/dnanexus/to_test/ -n /home/dnanexus/out/multiqc/QC/multiqc/$project-multiqc.html -c $multiqc_config
-
-# copy the config file used to multiqc data output folder
-mv $multiqc_config /home/dnanexus/out/multiqc/QC/multiqc/$project-multiqc_data/
-
-# Upload results
-dx-upload-all-outputs
+    # Upload results
+    dx-upload-all-outputs
+}
