@@ -24,11 +24,9 @@ def reformat(mapping_metrics, out_template):
     # Get the sample filename without directory prefixes. E.g.:
     #    /home/user/inputfile.txt ---> inputfile.txt
     sample_basename = os.path.basename(mapping_metrics)
-    # Remove the extension from the sample name. os.path.splitext splits the filename into a string,
-    # delimited by the extension. E.g.:
-    #    os.path.splitext("myfile1.txt") --> [ 'myfile', '.txt' ]
-    # This is selected by index [0] to get the first item, which is the sample name
-    sample = os.path.splitext(sample_basename)[0]
+    # Remove all file extensions from the sample name. 
+    # Finds the first '.' character and cleans from here to the end of the string.
+    sample = sample_basename[:sample_basename.index('.')]
 
     # Open the input dragen mapping metrics file and get the percentage duplicates value
     with open(mapping_metrics, 'r') as infile:

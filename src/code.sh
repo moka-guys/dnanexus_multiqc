@@ -81,6 +81,8 @@ main() {
     dx_find_and_download "*mapping_metrics.csv" $project_for_multiqc 
     # Convert any downloaded dragen mapping metrics files to picard markduplicates format for recognition by multiqc
     python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
+    # Remove mapping metrics template after use. This stops the template variable strings appearing in the general stats table
+    rm template.output.metrics
 
     # Download bcl2fastq QC files if found in the project
     dx_find_and_download 'Stats.json' $project_for_multiqc 1
