@@ -1,4 +1,4 @@
-# dnanexus_multiqc v 1.7
+# dnanexus_multiqc v 1.8
 ewels/MultiQC [v1.6](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
@@ -17,7 +17,7 @@ A project number is passed to the app as a parameter. This project must have a '
 
 Additional QC files are downloaded from other locations:
 * 'Stats.json' is downloaded from  /runfolder/Data/Intensities/BaseCalls/Stats if demultiplexing was performed by bcl2fastq v2.20 (or later) 
-* \*mapping_metrics.csv files are downloaded from /output if the MokaWES pipeline was run.
+* \*duplication_metrics or \*mapping_metrics.csv files are downloaded from /output if the MokaWES pipeline was run.
 
 ## What does this app output?
 The following outputs are placed in the DNAnexus project under '/QC/multiqc':
