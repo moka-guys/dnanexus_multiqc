@@ -41,6 +41,15 @@ extra_fn_clean_exts:
 #      pattern: 'NGS95a_'
     - type: remove
       pattern: '_001'      
+    - type: remove
+      pattern: '.markdup'
+    - type: remove
+      pattern: '.duplication' 
+    - type: remove
+      pattern: '.realigned'
+    - type: remove
+      pattern: '_metrics'
+
     # - .gz
     # - .fastq
     # - .fq

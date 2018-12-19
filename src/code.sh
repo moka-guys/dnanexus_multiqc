@@ -47,18 +47,10 @@ dx_find_and_download() {
 set_general_stats_coverage() {
     # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs.
 
-    # If coverage_level is given as a script option, store it in the config_cov variable.
-    # This uses the bash test option -z which, when negated with !, returns True if $coverage_level is not empty.
-    if [[ ! -z $coverage_level ]]; then
-        config_cov=$coverage_level
-    # Else if WES samples are present, set the coverage to 30 by searching for Pan493 in filename
-    elif [ $(ls $HOME | grep Pan493 | wc -l) -ne 0 ]; then
-        config_cov="20"
-    # In all other cases, leave the coverage to 30X, which is the default value in the config yaml
-    else
-        config_cov="30"
-    fi
-	# Subsitute the default coverage in the config file for $config_cov
+    # coverage_level is given as an input, store it in the config_cov variable.
+    config_cov=$coverage_level
+	
+    # Subsitute the default coverage in the config file for $config_cov
     #   - 'n;' makes the substitution occur on the line after the first instance of "general_stats_target_coverage" 
 	sed -i "/general_stats_target_coverage/{n;s/30/${config_cov}/}" dnanexus_multiqc_config.yaml
 }
@@ -83,6 +75,22 @@ main() {
     python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
     # Remove mapping metrics template after use. This stops the template variable strings appearing in the general stats table
     rm template.output.metrics
+
+    # Download sention markduplicates files if found in the project
+    dx_find_and_download "*duplication_metrics" $project_for_multiqc 
+    
+    # loop through all the duplication files to create a output.metrics file that MultiQC recognises
+    # this uses a template header which replaces the existing header
+    for file in ./*duplication_metrics; do
+        # create the output filename ending with *output.metrics
+        filename=$(echo $file | sed 's/duplication_/output./' -)
+        # A template header is used - replace placeholder with the samplename and write header to output file
+        sed "s/placeholder/$(basename $file)/" sention_output_metrics_header > $filename
+        # write all lines except the header line 
+        tail -n +2 $file >> $filename
+        done
+    # remove the template file so it doesn't appear on final report
+    rm sention_output_metrics_header
 
     # Download bcl2fastq QC files if found in the project
     dx_find_and_download 'Stats.json' $project_for_multiqc 1
