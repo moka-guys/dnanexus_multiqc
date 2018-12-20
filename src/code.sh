@@ -82,12 +82,15 @@ main() {
     # loop through all the duplication files to create a output.metrics file that MultiQC recognises
     # this uses a template header which replaces the existing header
     for file in ./*duplication_metrics; do
-        # create the output filename ending with *output.metrics
-        filename=$(echo $file | sed 's/duplication_/output./' -)
-        # A template header is used - replace placeholder with the samplename and write header to output file
-        sed "s/placeholder/$(basename $file)/" sention_output_metrics_header > $filename
-        # write all lines except the header line 
-        tail -n +2 $file >> $filename
+        # if the file exists
+        if [ -e $file ]; then
+            # create the output filename ending with *output.metrics
+            filename=$(echo $file | sed 's/duplication_/output./' -)
+            # A template header is used - replace placeholder with the samplename and write header to output file
+            sed "s/placeholder/$(basename $file)/" sention_output_metrics_header > $filename
+            # write all lines except the header line 
+            tail -n +2 $file >> $filename
+        fi
         done
     # remove the template file so it doesn't appear on final report
     rm sention_output_metrics_header
