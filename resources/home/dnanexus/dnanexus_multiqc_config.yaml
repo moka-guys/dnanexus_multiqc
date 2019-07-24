@@ -157,10 +157,10 @@ picard_config:
 table_cond_formatting_rules:
     mqc-generalstats-FREEMIX:
         fail:
-            - gt: 1
-            - eq: 1
+            - gt: 0.02
+            - eq: 0.02
         pass:
-            - lt: 1
+            - lt: 0.02
 
 # Remove plots from HTML report
 remove_sections:
