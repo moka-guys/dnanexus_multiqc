@@ -155,7 +155,7 @@ picard_config:
 
 # Set conditional formatting rules for general stats FREEMIX
 table_cond_formatting_rules:
-    mqc-generalstats-FREEMIX:
+    mqc-generalstats-verifybamid-FREEMIX:
         fail:
             - gt: 0.02
             - eq: 0.02
