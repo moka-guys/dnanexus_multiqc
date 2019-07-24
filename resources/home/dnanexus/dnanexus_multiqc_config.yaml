@@ -157,10 +157,10 @@ picard_config:
 table_cond_formatting_rules:
     mqc-generalstats-verifybamid-FREEMIX:
         fail:
-            - gt: 0.02
-            - eq: 0.02
+            - gt: 2
+            - eq: 2
         pass:
-            - lt: 0.02
+            - lt: 2
 
 # Remove plots from HTML report
 remove_sections:
