@@ -155,12 +155,12 @@ picard_config:
 
 # Set conditional formatting rules for general stats FREEMIX
 table_cond_formatting_rules:
-    mqc-generalstats-FREEMIX:
+    mqc-generalstats-verifybamid-FREEMIX:
         fail:
-            - gt: 1
-            - eq: 1
+            - gt: 2
+            - eq: 2
         pass:
-            - lt: 1
+            - lt: 2
 
 # Remove plots from HTML report
 remove_sections:

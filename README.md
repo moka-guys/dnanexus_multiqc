@@ -1,4 +1,4 @@
-# dnanexus_multiqc v 1.10
+# dnanexus_multiqc v 1.11
 ewels/MultiQC [v1.6](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
