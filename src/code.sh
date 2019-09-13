@@ -21,6 +21,7 @@ dx_find_and_download() {
     # `dx find data` returns a single space-delimited string. This result is warpped in parentheses creating a bash array.
     # Example with two matching files: echo ${file_ids[@]}
     # > project-FP7Q76j07v81kb4564qPFyb1:file-FP96Pp80Vf2bB7ZqJBbzbvp5 project-FP7Q76j07v81kb4564qPFyb1:file-FP96Q3801p85KY2g7GPfP6J6
+    # $name in double quotes to ensure correct usage of wildcards passed into function eg ensure the string *metrics* is passed into dx find and not a list of files containing metrics in filename
     file_ids=( $(dx find data --brief --path ${project}: --name "$name" --auth $API_KEY))
 
     files_found=${#file_ids[@]} # ${#variable[@]} gives the number of elements in array $variable
