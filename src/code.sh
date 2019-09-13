@@ -21,7 +21,7 @@ dx_find_and_download() {
     # `dx find data` returns a single space-delimited string. This result is warpped in parentheses creating a bash array.
     # Example with two matching files: echo ${file_ids[@]}
     # > project-FP7Q76j07v81kb4564qPFyb1:file-FP96Pp80Vf2bB7ZqJBbzbvp5 project-FP7Q76j07v81kb4564qPFyb1:file-FP96Q3801p85KY2g7GPfP6J6
-    file_ids=( $(dx find data --brief --path ${project}: --name $name --auth $API_KEY))
+    file_ids=( $(dx find data --brief --path ${project}: --name "$name" --auth $API_KEY))
 
     files_found=${#file_ids[@]} # ${#variable[@]} gives the number of elements in array $variable
 
@@ -32,7 +32,8 @@ dx_find_and_download() {
     elif [[ $max_find =~ [0-9]+ ]]; then
         # Download if number of files found is less than or equal to the max argument
         if [ $files_found -le $max_find ]; then
-            dx download ${file_ids[@]} --auth $API_KEY
+            # as dx find is recursive -f allows any files which match this search term but were previously downloaded to be downloaded again
+            dx download ${file_ids[@]} -f --auth $API_KEY
         # Else raise error
         else
             echo "Found $files_found files with name $name in $project. Expected $max_find files or less."
@@ -40,7 +41,8 @@ dx_find_and_download() {
         fi
     # Else download all files found
     else
-        dx download ${file_ids[@]} --auth $API_KEY
+    # as dx find is recursive -f allows any files which match this search term but were previously downloaded to be downloaded again
+        dx download ${file_ids[@]} -f --auth $API_KEY
     fi
 }
 
@@ -69,19 +71,14 @@ main() {
     # Files for multiqc are stored at 'project_for_multiqc:/QC/''. Download the contents of this folder.
     dx download ${project_for_multiqc}:QC/* --auth ${API_KEY}
 
-    # Download dragen markduplicates files if found in the project
-    dx_find_and_download "*mapping_metrics.csv" $project_for_multiqc 
-    # Convert any downloaded dragen mapping metrics files to picard markduplicates format for recognition by multiqc
-    python convert_mapping_metrics.py -t template.output.metrics *mapping_metrics.csv
-    # Remove mapping metrics template after use. This stops the template variable strings appearing in the general stats table
-    rm template.output.metrics
+    # Download all metrics files from the project (this will include the duplication metrics files (named slightly different by the various senteion apps))
+    dx_find_and_download '*metrics*' $project_for_multiqc 
 
-    # Download sention markduplicates files if found in the project
-    dx_find_and_download "*duplication_metrics" $project_for_multiqc 
     
     # loop through all the duplication files to create a output.metrics file that MultiQC recognises
     # this uses a template header which replaces the existing header
-    for file in ./*duplication_metrics; do
+    # NB the duplication metrics files are named as 'Duplication...' and 'duplication...'
+    for file in ./*uplication_metrics; do
         # if the file exists
         if [ -e $file ]; then
             # create the output filename ending with *output.metrics
