@@ -79,13 +79,17 @@ main() {
     # loop through all the duplication files to create a output.metrics file that MultiQC recognises
     # this uses a template header which replaces the existing header
     # NB the duplication metrics files are named as 'Duplication...' and 'duplication...'
-    for file in ./*uplication_metrics; do
+    for file in ./*uplication_metrics*; do
         # if the file exists
         if [ -e $file ]; then
-            # create the output filename ending with *output.metrics
-            filename=$(echo $file | sed 's/duplication_/output./' -)
-            # A template header is used - replace placeholder with the samplename and write header to output file
-            sed "s/placeholder/$(basename $file)/" sention_output_metrics_header > $filename
+            # create the output filename ending with *output.metrics (use i at end of regex to make case insensitive)
+            filename=$(echo $file | sed 's/duplication_/output./i' -)
+            # A template header is used - this contains a placeholder for the sample name
+            # To avoid too many rows in general stats table we want the samplename to be the same as that output from moka picard app (ending in _markdup and replacing any '.' with '_') 
+            samplename=$(echo $(basename $file) | sed 's/.Duplication_metrics.txt/_markdup/i' - )
+            samplename=$(echo $samplename | sed 's/\./_/' -)
+            # replace placeholder with the samplename and write header to output file
+            sed "s/placeholder/$samplename/" sention_output_metrics_header > $filename
             # write all lines except the header line 
             tail -n +2 $file >> $filename
         fi

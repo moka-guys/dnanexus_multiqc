@@ -28,7 +28,7 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 * A folder containing the output in text format.
 
 ## How does this app work?
-1. The app downloads files found in the QC/ directory of the project. MultiQC parses all files, including any recognised files in the report.
+1. The app downloads all files within the QC/ directory of the project. 
 2. The dx_find_and_download function is used to search for specific files, which are downloaded only if found.
 3. If sention duplication_metrics files are present the app replaces the header (with a template packaged in the app) so the file is recognised as a picard markduplicates file.
 4. The app sets the minimum-fold coverage reported in the general stats table by editing 'dnanexus_multiqc_config.yaml'. This value comes from the app's 'coverage_level' input parameter.
@@ -36,7 +36,8 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
     * `docker pull ewels/multiqc:v1.6`
     * `dx-docker create-asset ewels/multiqc:v1.6`
     * The asset on DNAnexus was then renamed with the following command: `dx mv ewels\\multiqc\\:v1.6 ewels_multiqc_v1.6`
-6. The MultiQC outputs are uploaded to DNAnexus.
+6. MultiQC parses all files, including any recognised files in the report.
+7. The MultiQC outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
 * The project which MultiQC is run on must be shared with the user mokaguys
