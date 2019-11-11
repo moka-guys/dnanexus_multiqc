@@ -33,16 +33,15 @@ dx_find_and_download() {
     elif [[ $max_find =~ [0-9]+ ]]; then
         # Download if number of files found is less than or equal to the max argument
         if [ $files_found -le $max_find ]; then
-            # as dx find is recursive -f allows any files which match this search term but were previously downloaded to be downloaded again
+            # as dx find is recursive -f any files which match this search term but were previously downloaded will be over written to prevent duplicate files.
             dx download ${file_ids[@]} -f --auth $API_KEY
         # Else raise error
         else
             echo "Found $files_found files with name $name in $project. Expected $max_find files or less."
             exit 1
         fi
-    # Else download all files found
+    # Else download all files found using -f to overwrite duplicate files
     else
-    # as dx find is recursive -f allows any files which match this search term but were previously downloaded to be downloaded again
         dx download ${file_ids[@]} -f --auth $API_KEY
     fi
 }
