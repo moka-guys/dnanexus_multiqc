@@ -1,13 +1,13 @@
 {
-  "name": "multiqc_v1.11",
-  "title": "MultiQC_v1.11",
-  "summary": "v1.11 - Generates a run-wide QC report on various QC data files",
+  "name": "multiqc_v1.12",
+  "title": "MultiQC_v1.12",
+  "summary": "v1.12 - Generates a run-wide QC report on various QC data files",
   "tags": [
     "Read QC",
     "Statistics"
   ],
   "properties": {
-    "github release": "v1.11"
+    "github release": "v1.12"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
