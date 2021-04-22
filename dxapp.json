@@ -1,13 +1,13 @@
 {
-  "name": "multiqc_v1.12",
-  "title": "MultiQC_v1.12",
-  "summary": "v1.12 - Generates a run-wide QC report on various QC data files",
+  "name": "multiqc_v1.13.0",
+  "title": "MultiQC_v1.13.0",
+  "summary": "v1.13.0 - Generates a run-wide QC report on various QC data files",
   "tags": [
     "Read QC",
     "Statistics"
   ],
   "properties": {
-    "github release": "v1.12"
+    "github release": "v1.13.0"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -22,7 +22,15 @@
       "label": "coverage level",
       "help": "Set the (picard) coverage level reported in the card general stats table. E.g. '20' for % target bases with coverage >= 20X",
       "class": "string",
-      "choices": ["2", "10", "20", "30", "40", "50", "100"]
+      "choices": [
+        "2",
+        "10",
+        "20",
+        "30",
+        "40",
+        "50",
+        "100"
+      ]
     }
   ],
   "outputSpec": [
@@ -40,29 +48,18 @@
     }
   ],
   "runSpec": {
-    "execDepends": [
-      {
-        "name": "Jinja2",
-        "package_manager": "pip",
-        "version": "2.10"
-      }
-    ],
-    "distribution" : "Ubuntu",
-    "release":"14.04",
-    "file": "src/code.sh",
     "interpreter": "bash",
-    "assetDepends": [
-      {
-        "id": "record-FPX7Yx00jy1bx5vX526pfbx2"
-        }
-      ]    
+    "distribution": "Ubuntu",
+    "release": "16.04",
+    "file": "src/code.sh"
   },
   "access": {
-    "allProjects":"VIEW",
     "network": [
       "*"
-    ]
+    ],
+    "allProjects": "VIEW"
   },
+  "ignoreReuse": false,
   "regionalOptions": {
     "aws:us-east-1": {
       "systemRequirements": {
