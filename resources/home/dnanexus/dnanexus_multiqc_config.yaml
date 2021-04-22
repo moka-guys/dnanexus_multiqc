@@ -168,3 +168,13 @@ remove_sections:
     - peddy-pca-plot
     - peddy-relatedness-plot
     - peddy-hetcheck-plot
+
+#Modules to exclude
+exclude_modules:
+    #module breaks in newer MultiQC versions 
+    - gatk
+
+#Files to ignore
+fn_ignore_files:
+    - "ValidateSamFile.py"
+    - "rmdup.py"

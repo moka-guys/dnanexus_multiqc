@@ -107,10 +107,11 @@ main() {
     #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
     # The docker -v flag mounts a local directory to the docker environment in the format:
     #    -v local_dir:docker_dir
-    # Here, the directory 'sandbox' is mapped to the /home/dnanexus directory, and passed to
-    # multiqc to search for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
-    dx-docker run -v /home/dnanexus:/sandbox ewels/multiqc:v1.6 multiqc sandbox/ \
-        -n sandbox/${outdir}/${project}-multiqc.html -c sandbox/dnanexus_multiqc_config.yaml
+    # Pull docker image from Dockerhub 
+    # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
+    docker pull ewels/multiqc:1.10.1
+    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:1.10.1 multiqc /home/dnanexus/ \
+        -n /home/dnanexus/${outdir}/${project}-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc
     mv dnanexus_multiqc_config.yaml ${outdir}/${project}-multiqc_data/
