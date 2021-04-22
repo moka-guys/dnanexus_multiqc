@@ -1,5 +1,5 @@
-# dnanexus_multiqc v 1.12
-ewels/MultiQC [v1.6](https://github.com/ewels/MultiQC/)
+# dnanexus_multiqc v 1.13.0
+ewels/MultiQC [v1.10.1](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
 This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe and MokaWES pipelines including:
@@ -32,10 +32,7 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 2. The dx_find_and_download function is used to search for specific files, which are downloaded only if found.
 3. If sention duplication_metrics files are present the app replaces the header (with a template packaged in the app) so the file is recognised as a picard markduplicates file.
 4. The app sets the minimum-fold coverage reported in the general stats table by editing 'dnanexus_multiqc_config.yaml'. This value comes from the app's 'coverage_level' input parameter.
-5. A dockerised version of MultiQC is used. The docker image is stored on DNAnexus as an asset, which is bundled with the app build. The following commands were used to generate this asset in a cloud workstation:
-    * `docker pull ewels/multiqc:v1.6`
-    * `dx-docker create-asset ewels/multiqc:v1.6`
-    * The asset on DNAnexus was then renamed with the following command: `dx mv ewels\\multiqc\\:v1.6 ewels_multiqc_v1.6`
+5. A dockerised version of MultiQC is used. The docker image is pulled each time the app is run.
 6. MultiQC parses all files, including any recognised files in the report.
 7. The MultiQC outputs are uploaded to DNAnexus.
 
