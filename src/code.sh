@@ -109,8 +109,8 @@ main() {
     #    -v local_dir:docker_dir
     # Pull docker image from Dockerhub 
     # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
-    docker pull ewels/multiqc:1.11
-    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:1.11 multiqc /home/dnanexus/ \
+    docker pull ewels/multiqc:v1.11
+    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:v1.11 multiqc /home/dnanexus/ \
         -n /home/dnanexus/${outdir}/${project}-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc
