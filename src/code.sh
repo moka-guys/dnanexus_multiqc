@@ -102,15 +102,15 @@ main() {
     # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs
     set_general_stats_coverage
 
-    # Call multiqc v1.6 from docker image (ewels_multiqc_v1.6). This image is an asset on DNAnexus, bundled with the app.
+    # Call multiqc v1.11 from docker image (ewels_multiqc_v1.11). This image is an asset on DNAnexus, bundled with the app.
     # MultiQC is run with the following parameters :
     #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
     # The docker -v flag mounts a local directory to the docker environment in the format:
     #    -v local_dir:docker_dir
     # Pull docker image from Dockerhub 
     # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
-    docker pull ewels/multiqc:1.10.1
-    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:1.10.1 multiqc /home/dnanexus/ \
+    docker pull ewels/multiqc:1.11
+    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:1.11 multiqc /home/dnanexus/ \
         -n /home/dnanexus/${outdir}/${project}-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc

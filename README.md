@@ -1,5 +1,5 @@
 # dnanexus_multiqc v 1.14.0
-ewels/MultiQC [v1.10.1](https://github.com/ewels/MultiQC/)
+ewels/MultiQC [v1.11](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
 This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe and MokaWES pipelines including:

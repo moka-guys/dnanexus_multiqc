@@ -1,7 +1,7 @@
 {
   "name": "multiqc_v1.14.0",
   "title": "MultiQC_v1.14.0",
-  "summary": "v1.13.0 - Generates a run-wide QC report on various QC data files",
+  "summary": "v1.14.0 - Generates a run-wide QC report on various QC data files",
   "tags": [
     "Read QC",
     "Statistics"
