@@ -164,9 +164,8 @@ table_cond_formatting_rules:
 
 # Remove plots from HTML report
 remove_sections:
-    # For peddy, keep only the sex-check plot
+    # For peddy, keep only the sex-check plot and peddy-relatedness-plot
     - peddy-pca-plot
-    - peddy-relatedness-plot
     - peddy-hetcheck-plot
 
 #Modules to exclude
