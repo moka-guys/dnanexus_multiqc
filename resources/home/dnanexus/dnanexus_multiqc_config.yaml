@@ -40,11 +40,11 @@ extra_fn_clean_exts:
 #    - type: 'replace'
 #      pattern: 'NGS95a_'
     - type: remove
-      pattern: '_001'      
+      pattern: '_001'
     - type: remove
       pattern: '.markdup'
     - type: remove
-      pattern: '.duplication' 
+      pattern: '.duplication'
     - type: remove
       pattern: '.realigned'
     - type: remove
@@ -142,7 +142,6 @@ table_columns_visible:
         ancestry-prediction: False
         ancestry-prob_het_check: False
         predicted_sex_sex_check: False
-        predicted_sex_sex_check: False    
         sex_het_ratio: True
         sex_error: True
     verifyBAMID:
@@ -167,11 +166,6 @@ remove_sections:
     # For peddy, keep only the sex-check plot and peddy-relatedness-plot
     - peddy-pca-plot
     - peddy-hetcheck-plot
-
-#Modules to exclude
-exclude_modules:
-    #module breaks in newer MultiQC versions 
-    - gatk
 
 #Files to ignore
 fn_ignore_files:
