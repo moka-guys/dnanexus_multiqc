@@ -1,13 +1,13 @@
 {
-  "name": "multiqc_v1.13.0",
-  "title": "MultiQC_v1.13.0",
-  "summary": "v1.13.0 - Generates a run-wide QC report on various QC data files",
+  "name": "multiqc_v1.14.0",
+  "title": "MultiQC_v1.14.0",
+  "summary": "v1.14.0 - Generates a run-wide QC report on various QC data files. The app runs dockerised MultiQC v1.11",
   "tags": [
     "Read QC",
     "Statistics"
   ],
   "properties": {
-    "github release": "v1.13.0"
+    "github release": "v1.14.0"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -50,7 +50,8 @@
   "runSpec": {
     "interpreter": "bash",
     "distribution": "Ubuntu",
-    "release": "16.04",
+    "release": "20.04",
+    "version": "0",
     "file": "src/code.sh"
   },
   "access": {
