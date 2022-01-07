@@ -1,4 +1,4 @@
-# dnanexus_multiqc v1.14.0
+# dnanexus_multiqc v1.15.0
 ewels/MultiQC [v1.11](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
@@ -10,6 +10,9 @@ pipelines including:
 * Peddy
 * verifyBAMID
 * Sentieon (duplication_metrics)
+* TSO500 (MetricsOutput.tsv)
+* som.py (recall metrics for reference standards)
+* exomedepth (correlation, variation, dispersion, etc.)
 
 ## What are typical use cases for this app?
 To generate QC reports, this app should be run at the end of an NGS pipeline, when all QC software outputs are 
