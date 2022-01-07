@@ -1,6 +1,7 @@
 # dnanexus_multiqc v1.15.0
+
 ## MultiQC version
-The docker image applied in this release is [seglh/multiqc:v1.11](https://github.com/moka-guys/multiqc_plugins)  and is pulled from dockerhub.
+The docker image applied in this release is [seglh/multiqc:v1.11](https://github.com/moka-guys/multiqc_plugins) and is pulled from dockerhub.
 This release is based on MultiQC [v1.11](https://github.com/ewels/MultiQC/) and incorporates a custom plugin to add support for som.py, exome depth and the TSO500 metrics.tsv file.
 
 ## What does this app do?
@@ -54,6 +55,5 @@ so the file is recognised as a picard markduplicates file.
 * The project which MultiQC is run on must be shared with the user mokaguys
 * Only one value can be given to the coverage_level parameter, which may not be ideal for runs with mixed samples. 
 Multiple reports may be required in these cases
-
 
 ## This app was made by Viapath Genome Informatics
