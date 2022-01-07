@@ -1,7 +1,7 @@
 {
   "name": "multiqc_v1.15.0",
   "title": "MultiQC_v1.15.0",
-  "summary": "v1.15.0 - Generates a run-wide QC report on various QC data files. The app runs dockerised MultiQC v1.11",
+  "summary": "v1.15.0 - Generates a run-wide QC report on various QC data files. The app runs a dockerised version of MultiQC v1.11 including the SEGLH plugin (som.py, exome depth and TSO500).",
   "tags": [
     "Read QC",
     "Statistics"
