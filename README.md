@@ -1,19 +1,21 @@
-# dnanexus_multiqc v1.14.0
+# dnanexus_multiqc v1.15.0
 ewels/MultiQC [v1.11](https://github.com/ewels/MultiQC/)
 
 ## What does this app do?
-This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe and MokaWES 
+This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe, TSO500 and MokaWES 
 pipelines including:
 * Picard (CalculateHsMetrics, MarkDuplicates and CollectMultipleMetrics, TargetedPcrMetrics)
 * FastQC 
 * bcl2fastq2
+* bclconvert
 * Peddy
 * verifyBAMID
 * Sentieon (duplication_metrics)
 
+* As of v1.15.0 a custom plugin was included to parse ther TSO500 metrics.tsv file.
+
 ## What are typical use cases for this app?
-To generate QC reports, this app should be run at the end of an NGS pipeline, when all QC software outputs are 
-available.
+To generate QC reports, this app should be run at the end of an NGS pipeline, when all QC software outputs are available.
 
 ## What data are required for this app to run?
 * project_for_multiQC - The name of the project to be assessed.
@@ -33,7 +35,7 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 * A folder containing the output in text format.
 
 ## How does this app work?
-1. The app downloads all files within the QC/ directory of the project. 
+1. The app downloads all files (recursively) within the QC/ directory of the project. 
 2. The dx_find_and_download function is used to search for specific files, which are downloaded only if found.
 3. If sention duplication_metrics files are present the app replaces the header (with a template packaged in the app) 
 so the file is recognised as a picard markduplicates file.
@@ -53,6 +55,7 @@ The multiqc docker image was created using the Dockerfile, tagged, and saved as 
 in the resources/usr/bin directory before building the dnanexus app. The app loads the docker images from the .tar.gz 
 files.
 ```
+#TODO CHANGE TO DOWNLOAD FROM 001
 sudo docker build - < Dockerfile 
 sudo docker tag <image_id> ewels/multiqc:v1.11 
 sudo docker save ewels/multiqc:v1.11 | gzip > multiqc.tar.gz
