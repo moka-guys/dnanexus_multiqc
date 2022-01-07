@@ -1,5 +1,6 @@
 # dnanexus_multiqc v1.15.0
 ewels/MultiQC [v1.11](https://github.com/ewels/MultiQC/)
+with SEGLH plugin [v1.0.0](https://github/moka-guys/multiqc_plugins)
 
 ## What does this app do?
 This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe and MokaWES 
@@ -57,8 +58,8 @@ in the resources/usr/bin directory before building the dnanexus app. The app loa
 files.
 ```
 sudo docker build - < Dockerfile 
-sudo docker tag <image_id> ewels/multiqc:v1.11 
-sudo docker save ewels/multiqc:v1.11 | gzip > multiqc.tar.gz
+sudo docker tag <image_id> seglh/multiqc:v1.11 
+sudo docker save seglh/multiqc:v1.11 | gzip > multiqc.tar.gz
 ```
 
 ## This app was made by Viapath Genome Informatics
