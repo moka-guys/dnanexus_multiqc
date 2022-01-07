@@ -1,5 +1,7 @@
 # dnanexus_multiqc v1.15.0
-ewels/MultiQC [v1.11](https://github.com/ewels/MultiQC/)
+## MultiQC version
+The docker image applied in this release is [seglh/multiqc:v1.11](https://github.com/moka-guys/multiqc_plugins)  and is pulled from dockerhub.
+This release is based on MultiQC [v1.11](https://github.com/ewels/MultiQC/) and incorporates a custom plugin to add support for som.py, exome depth and the TSO500 metrics.tsv file.
 
 ## What does this app do?
 This app runs MultiQC to generate run wide quality control (QC) using the outputs from MokaAMP, MokaPipe, TSO500 and MokaWES 
@@ -11,8 +13,11 @@ pipelines including:
 * Peddy
 * verifyBAMID
 * Sentieon (duplication_metrics)
+* som.py ^
+* TSO500 metrics.tsv ^
+* exome depth ^
 
-* As of v1.15.0 a custom plugin was included to parse ther TSO500 metrics.tsv file.
+^ provided by SEGLH plugin.
 
 ## What are typical use cases for this app?
 To generate QC reports, this app should be run at the end of an NGS pipeline, when all QC software outputs are available.
@@ -41,7 +46,7 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 so the file is recognised as a picard markduplicates file.
 4. The app sets the minimum-fold coverage reported in the general stats table by editing 
 'dnanexus_multiqc_config.yaml'. This value comes from the app's 'coverage_level' input parameter.
-5. A dockerised version of MultiQC is used (v1.11). 
+5. A dockerised version of MultiQC is used. 
 6. MultiQC parses all files, including any recognised files in the report.
 7. The MultiQC outputs are uploaded to DNAnexus.
 
@@ -50,15 +55,5 @@ so the file is recognised as a picard markduplicates file.
 * Only one value can be given to the coverage_level parameter, which may not be ideal for runs with mixed samples. 
 Multiple reports may be required in these cases
 
-## How was the .tar.gz file created?
-The multiqc docker image was created using the Dockerfile, tagged, and saved as a multiqc.tar.gz file which was placed 
-in the resources/usr/bin directory before building the dnanexus app. The app loads the docker images from the .tar.gz 
-files.
-```
-#TODO CHANGE TO DOWNLOAD FROM 001
-sudo docker build - < Dockerfile 
-sudo docker tag <image_id> ewels/multiqc:v1.11 
-sudo docker save ewels/multiqc:v1.11 | gzip > multiqc.tar.gz
-```
 
 ## This app was made by Viapath Genome Informatics
