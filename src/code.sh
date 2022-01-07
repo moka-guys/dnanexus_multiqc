@@ -118,7 +118,7 @@ main() {
     #TODO CHANGE TO DOWNLOAD FROM 001
     docker load < /usr/bin/multiqc.tar.gz
 
-    docker run -v /home/dnanexus:/home/dnanexus ewels/multiqc:v1.11 /home/dnanexus/ \
+    docker run -v /home/dnanexus:/home/dnanexus seglh/multiqc:v1.11 /home/dnanexus/ \
         -n /home/dnanexus/${outdir}/"${project}"-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc
