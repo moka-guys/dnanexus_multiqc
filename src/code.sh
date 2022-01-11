@@ -80,26 +80,6 @@ main() {
     # different by the various senteion apps))
     dx_find_and_download '*metrics*' "$project_for_multiqc"
 
-
-    # # loop through all the duplication files to create a output.metrics file that MultiQC recognises
-    # # this uses a template header which replaces the existing header
-    # # NB the duplication metrics files are named as 'Duplication...' and 'duplication...'
-    # for file in ./*uplication_metrics*; do
-    #     # if the file exists
-    #     if [ -e "$file" ]; then
-    #         # create the output filename ending with *output.metrics (use i at end of regex to make case insensitive)
-    #         filename=$(echo "$file" | sed 's/duplication_/output./i' -)
-    #         # A template header is used - this contains a placeholder for the sample name
-    #         # To avoid too many rows in general stats table we want the samplename to be the same as that output from
-    #         # moka picard app (ending in _markdup and replacing any '.' with '_')
-    #         samplename=$(echo $(basename "$file") | sed 's/.Duplication_metrics.txt/_markdup/i' - )
-    #         samplename=$(echo "$samplename" | sed 's/\./_/' -)
-    #         # replace placeholder with the samplename and write header to output file
-    #         sed "s/placeholder/$samplename/" sention_output_metrics_header > "$filename"
-    #         # write all lines except the header line
-    #         tail -n +2 "$file" >> "$filename"
-    #     fi
-    #     done
     # remove the template file so it doesn't appear on final report
     rm sention_output_metrics_header
 
@@ -109,14 +89,11 @@ main() {
     # Format dnanexus_multiqc_config.yaml file general stats coverage column based on project inputs
     set_general_stats_coverage
 
-    # Load multiqc v1.11 image and call multiqc. This image is an asset on DNAnexus, bundled with the app.
     # MultiQC is run with the following parameters :
     #    multiqc <dir containing files> -n <path/to/output> -c </path/to/config>
     # The docker -v flag mounts a local directory to the docker environment in the format:
     #    -v local_dir:docker_dir
     # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
-    #TODO CHANGE TO DOWNLOAD FROM 001
-    docker load < /usr/bin/multiqc.tar.gz
 
     docker run -v /home/dnanexus:/home/dnanexus seglh/multiqc:v1.11 /home/dnanexus/ \
         -n /home/dnanexus/${outdir}/"${project}"-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
