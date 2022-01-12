@@ -52,13 +52,11 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 
 1. The app downloads all files (recursively) within the QC/ directory of the project. 
 2. The dx_find_and_download function is used to search for specific files, which are downloaded only if found.
-3. If sention duplication_metrics files are present the app replaces the header (with a template packaged in the app) 
-so the file is recognised as a picard markduplicates file.
-4. The app sets the minimum-fold coverage reported in the general stats table by editing 
+3. The app sets the minimum-fold coverage reported in the general stats table by editing 
 'dnanexus_multiqc_config.yaml'. This value comes from the app's 'coverage_level' input parameter.
-5. A dockerised version of MultiQC is used.
-6. MultiQC parses all files, including any recognised files in the report.
-7. The MultiQC outputs are uploaded to DNAnexus.
+4. A dockerised version of MultiQC is used.
+5. MultiQC parses all files, including any recognised files in the report.
+6. The MultiQC outputs are uploaded to DNAnexus.
 
 ## What are the limitations of this app
 
