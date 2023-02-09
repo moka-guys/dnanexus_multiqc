@@ -152,6 +152,10 @@ picard_config:
     general_stats_target_coverage:
         - 30
 
+# set bclconvert configs
+bclconvert:
+    create_undetermined_barcode_barplots: True
+
 # Set conditional formatting rules for general stats FREEMIX
 table_cond_formatting_rules:
     mqc-generalstats-verifybamid-FREEMIX:
