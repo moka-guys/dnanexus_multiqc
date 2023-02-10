@@ -114,7 +114,16 @@ sp:
     picard/markdups:
         contents: 'picard.sam.DuplicationMetrics'
         shared: true
-
+    bclconvert/Lane_*/runinfo:
+        fn: RunInfo.xml
+    bclconvert/Lane_*/demux:
+        fn: Demultiplex_Stats.csv
+    bclconvert/Lane_*/quality_metrics:
+        fn: Quality_Metrics.csv
+    bclconvert/Lane_*/adaptermetrics:
+        fn: Adapter_Metrics.csv
+    bclconvert/Lane_*/unknown_barcodes:
+        fn: Top_Unknown_Barcodes.csv
 
 # # Specify a custom logo to add to reports (uncomment to use)
 # custom_logo: null         # '/path/to/logo.png'

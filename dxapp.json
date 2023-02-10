@@ -31,14 +31,6 @@
         "50",
         "100"
       ]
-    },
-    {
-      "name": "additional_QC_folder_locations",
-      "label": "additional QC folder locations",
-      "help": "folders containing additional QC files to include in the report, e.g. for bclconvert data. Given as additional paths when running the docker image",
-      "class": "string",
-      "optional": true,
-      "default": ""
     }
   ],
   "outputSpec": [

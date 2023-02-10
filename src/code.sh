@@ -106,7 +106,7 @@ main() {
     echo "Using docker image ${multiqc_Docker_image_name}"
 
 
-    docker run -v /home/dnanexus:/home/dnanexus --rm ${multiqc_Docker_image_name} /home/dnanexus/ $additional_QC_folder_locations \
+    docker run -v /home/dnanexus:/home/dnanexus --rm ${multiqc_Docker_image_name} /home/dnanexus/ \
         -n /home/dnanexus/${outdir}/"${project}"-multiqc.html -c /home/dnanexus/dnanexus_multiqc_config.yaml
 
     # Move the config file to the multiqc data output folder. This was created by running multiqc
