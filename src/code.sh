@@ -74,7 +74,9 @@ main() {
     report_outdir=out/multiqc_report/QC/multiqc && mkdir -p ${report_outdir}
 
     # Files for multiqc are stored at 'project_for_multiqc:/QC/''. Download the contents of this folder.
-    dx download -r "${project_for_multiqc}":QC/* --auth "${API_KEY}"
+    dx download -r "${project_for_multiqc}":/QC --auth "${API_KEY}"
+    touch ${outdir}/dx_download_test.txt
+    ls -l > ${outdir}/dx_download_test.txt
 
     # Download all metrics files from the project (this will include the duplication metrics files (named slightly
     # different by the various senteion apps))
@@ -96,7 +98,7 @@ main() {
     # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
 
     #get the multiqc docker and extract 
-    multiqc_docker_file_id=project-ByfFPz00jy1fk6PjpZ95F27J:file-GK2FfZQ0jy1vVJqq752yvQJF #TODO update this to the new image
+    multiqc_docker_file_id=project-ByfFPz00jy1fk6PjpZ95F27J:file-GPbk5fj0jy1vq5kY1P09gf4J # 001_ToolsReferenceData:/Data/Docker/multiqcv1.14_plugin_v1.3.0.tar.gz
     dx download ${multiqc_docker_file_id}
     multiqc_Docker_image_file=$(dx describe ${multiqc_docker_file_id} --name)
     multiqc_Docker_image_name=$(tar xfO "${multiqc_Docker_image_file}" manifest.json | sed -E 's/.*"RepoTags":\["?([^"]*)"?.*/\1/')
