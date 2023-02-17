@@ -73,10 +73,8 @@ main() {
     # Assing multiqc report output directory name to variable and create
     report_outdir=out/multiqc_report/QC/multiqc && mkdir -p ${report_outdir}
 
-    # Files for multiqc are stored at 'project_for_multiqc:/QC/''. Download the contents of this folder.
+    # Files for multiqc are stored at 'project_for_multiqc:/QC'. Download the contents of this folder.
     dx download -r "${project_for_multiqc}":/QC --auth "${API_KEY}"
-    touch ${outdir}/dx_download_test.txt
-    ls -l > ${outdir}/dx_download_test.txt
 
     # Download all metrics files from the project (this will include the duplication metrics files (named slightly
     # different by the various senteion apps))
