@@ -1,4 +1,4 @@
-# dnanexus_multiqc v1.16.0
+# dnanexus_multiqc v1.17.0
 
 ## MultiQC version
 
@@ -33,6 +33,7 @@ To generate QC reports, this app should be run at the end of an NGS pipeline, wh
   * This project must have a 'QC' folder in its root directory.
 * coverage_level - Define which column to display from hsmetrics, reporting the percentage of target bases covered at
 the required depth (eg PCT_TARGET_BASES_20X)
+* (optional) additional paths to locations of data to be included in the multiqc report, eg for bclconvert data.
 
 Additional QC files are downloaded from other locations:
 
