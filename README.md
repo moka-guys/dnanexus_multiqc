@@ -1,8 +1,8 @@
-# dnanexus_multiqc v1.17.0
+# dnanexus_multiqc v1.18.0
 
 ## MultiQC version
 
-The docker image applied in this release is [seglh/multiqc_v1.13:v1.2.0](https://github.com/moka-guys/multiqc_plugins/releases/tag/v1.2.0) and is pulled from dockerhub.
+The docker image applied in this release is [seglh/multiqc_v1.13:v1.4.0](https://github.com/moka-guys/multiqc_plugins/releases/tag/v1.4.0) and is stored in DNAnexus.
 This release is based on MultiQC [v1.13](https://github.com/ewels/MultiQC/) and incorporates a custom plugin to add support for som.py, exome depth and the TSO500 metrics.tsv file.
 
 ## What does this app do?
@@ -20,6 +20,7 @@ pipelines including:
 * som.py ^
 * TSO500 metrics.tsv ^
 * exome depth ^
+* Sambamba_chanjo ^
 
 ^ provided by SEGLH plugin.
 
@@ -65,4 +66,4 @@ The following outputs are placed in the DNAnexus project under '/QC/multiqc':
 * Only one value can be given to the coverage_level parameter, which may not be ideal for runs with mixed samples. 
 Multiple reports may be required in these cases
 
-## This app was made by Viapath Genome Informatics
+## This app was made by Synnovis Genome Informatics

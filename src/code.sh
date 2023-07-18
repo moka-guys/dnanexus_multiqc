@@ -79,6 +79,7 @@ main() {
     # Download all metrics files from the project (this will include the duplication metrics files (named slightly
     # different by the various senteion apps))
     dx_find_and_download '*metrics*' "$project_for_multiqc"
+    dx_find_and_download '*gene_level*' "$project_for_multiqc"
 
     # remove the template file so it doesn't appear on final report
     rm sention_output_metrics_header
@@ -96,7 +97,7 @@ main() {
     # Multiqc searches for QC files. Docker passes any new files back to this mapped location on the DNAnexus worker.
 
     #get the multiqc docker and extract 
-    multiqc_docker_file_id=project-ByfFPz00jy1fk6PjpZ95F27J:file-GPbk5fj0jy1vq5kY1P09gf4J # 001_ToolsReferenceData:/Data/Docker/multiqcv1.14_plugin_v1.3.0.tar.gz
+    multiqc_docker_file_id=project-ByfFPz00jy1fk6PjpZ95F27J:file-GX07bkj0jy1Qqjgb1v8FZvX6 # 001_ToolsReferenceData:/Data/Docker/multiqcv1.14_plugin_v1.4.0.tar.gz
     dx download ${multiqc_docker_file_id}
     multiqc_Docker_image_file=$(dx describe ${multiqc_docker_file_id} --name)
     multiqc_Docker_image_name=$(tar xfO "${multiqc_Docker_image_file}" manifest.json | sed -E 's/.*"RepoTags":\["?([^"]*)"?.*/\1/')
