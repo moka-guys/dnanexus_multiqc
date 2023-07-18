@@ -2,7 +2,7 @@
 
 ## MultiQC version
 
-The docker image applied in this release is [seglh/multiqc_v1.13:v1.4.0](https://github.com/moka-guys/multiqc_plugins/releases/tag/v1.4.0) and is pulled from dockerhub.
+The docker image applied in this release is [seglh/multiqc_v1.13:v1.4.0](https://github.com/moka-guys/multiqc_plugins/releases/tag/v1.4.0) and is stored in DNAnexus.
 This release is based on MultiQC [v1.13](https://github.com/ewels/MultiQC/) and incorporates a custom plugin to add support for som.py, exome depth and the TSO500 metrics.tsv file.
 
 ## What does this app do?
