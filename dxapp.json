@@ -1,13 +1,13 @@
 {
-  "name": "multiqc_v1.17.0",
-  "title": "MultiQC_v1.17.0",
-  "summary": "v1.17.0 - Generates a run-wide QC report on various QC data files. The app runs a dockerised version of MultiQC v1.14 including the SEGLH plugin v1.3.0 (som.py, exome depth and TSO500).",
+  "name": "multiqc_v1.18.0",
+  "title": "MultiQC_v1.18.0",
+  "summary": "v1.18.0 - Generates a run-wide QC report on various QC data files. The app runs a dockerised version of MultiQC v1.14 including the SEGLH plugin v1.3.0 (som.py, exome depth and TSO500).",
   "tags": [
     "Read QC",
     "Statistics"
   ],
   "properties": {
-    "github release": "v1.17.0"
+    "github release": "v1.18.0"
   },
   "dxapi": "1.0.0",
   "inputSpec": [
@@ -65,7 +65,7 @@
     "aws:us-east-1": {
       "systemRequirements": {
         "main": {
-          "instanceType": "mem1_ssd1_x2"
+          "instanceType": "mem1_ssd1_v2_x2"
         }
       }
     }
